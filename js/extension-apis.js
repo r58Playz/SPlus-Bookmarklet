@@ -17,7 +17,7 @@ const c_s_sync = {
     },
     set(toSet, callback) {
         console.log("Redirected chrome.storage.set");
-        f
+        
     }
 }
 function c_r_getManifest() {

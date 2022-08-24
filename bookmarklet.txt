@@ -1,0 +1,12 @@
+let urls = ["http://localhost:8080/sPlusv2loader.js"];
+
+for(const urla of urls) {
+var url = urla;
+var type = url.match(/\s?module\s?/) ? 'module' : 'text/javascript';
+url = url.replace(/\s?module\s?/, '');
+var x = document.createElement('script');
+x.setAttribute('src', url);
+x.setAttribute('type', type);
+document.querySelector('head').appendChild(x);
+alert("Loaded.");
+}
