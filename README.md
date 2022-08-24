@@ -1,1 +1,1 @@
-# SPlus-Bookmarklet
+# Schoology Plus Bookmarklet
