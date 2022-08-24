@@ -10,3 +10,8 @@ x.setAttribute('type', type);
 document.querySelector('head').appendChild(x);
 alert("Loaded.");
 }
+
+
+
+
+javascript:(function()%7Blet%20urls%20%3D%20%5B%22https%3A%2F%2Fsplus-bookmarklet.vercel.app%2FsPlusv2loader.js%22%5D%3B%0A%0Afor(const%20urla%20of%20urls)%20%7B%0Avar%20url%20%3D%20urla%3B%0Avar%20type%20%3D%20url.match(%2F%5Cs%3Fmodule%5Cs%3F%2F)%20%3F%20'module'%20%3A%20'text%2Fjavascript'%3B%0Aurl%20%3D%20url.replace(%2F%5Cs%3Fmodule%5Cs%3F%2F%2C%20'')%3B%0Avar%20x%20%3D%20document.createElement('script')%3B%0Ax.setAttribute('src'%2C%20url)%3B%0Ax.setAttribute('type'%2C%20type)%3B%0Adocument.querySelector('head').appendChild(x)%3B%0Aalert(%22Loaded.%22)%3B%0A%7D%7D)()%3B
