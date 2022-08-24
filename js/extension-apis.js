@@ -1,5 +1,5 @@
 // IMPORTANT!!!! SET THIS TO WHERE YOU ARE HOSTING THIS!!!!!
-let SPlusStubs_hosting_url = "https://splus-bookmarklet.vercel.app/"
+let SPlusStubs_hosting_url = "https://8080-r58playz-splusbookmarkl-0tqywk20cc2.ws-us63.gitpod.io/"
 
 // non-extension impl of chrome.storage and chrome.runtime
 const c_storage = {

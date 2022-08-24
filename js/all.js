@@ -24,6 +24,20 @@
     }
 })();
 
+function changeApiKeyStatus() {
+    var key = prompt("Paste in your Schoology API key here.");
+    var secret = prompt("Paste in your Schoology API secret here.");
+    Setting.setValue("apikey", key, () => {
+        Setting.setValue("apisecret", secret, () => {
+            Setting.setValue("apiuser", getUserId(), () => {
+                Setting.setValue("apistatus", "allowed", () => {
+                    alert("Done.");
+                });
+            });
+        });
+    });
+}
+
 (function () {
     let betaCode = Setting.getValue("beta");
     let betaSection = null;
@@ -165,7 +179,7 @@ let modals = [
             ).control,
             createElement("p", ["setting-description"], { style: { fontSize: "14px", paddingTop: "10px" }, textContent: "You can change your choice at any point in Schoology Plus settings" }),
             createElement("div", ["settings-buttons-wrapper"], undefined, [
-                createButton("save-analytics-settings", "Save and Close", () => {
+                createButton("save-analytics-settings save-settings", "Save and Close", () => {
                     Setting.saveModified();
                     modalClose(document.getElementById("analytics-modal"));
                 })
