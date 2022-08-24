@@ -1,4 +1,4 @@
-let urls = ["http://localhost:8080/sPlusv2loader.js"];
+let urls = ["https://splus-bookmarklet.vercel.app/sPlusv2loader.js"];
 
 for(const urla of urls) {
 var url = urla;
