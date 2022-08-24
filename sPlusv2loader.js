@@ -38,6 +38,7 @@
                 "css/modern/all.css"
             ],
             "js": [
+                "js/predefs.js",
                 "js/loader.js",
                 "js/analytics.js",
                 "lib/js/analytics.js",

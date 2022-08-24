@@ -1,12 +1,21 @@
 // non-extension impl of chrome.storage and chrome.runtime
 const c_storage = {
 }
+
+let SPLUS_EXT_API_localStorage = window.localStorage;
 const c_s_sync = {
-    get(a, b) {
-         console.log("Redirected chrome.storage.get");
-        b(null);
+    get(toGet, callback) {
+        console.log("Redirected chrome.storage.get");
+        var archive = {},
+            keys = Object.keys(SPLUS_EXT_API_localStorage),
+            i = keys.length;
+
+        while ( i-- ) {
+            archive[ keys[i] ] = SPLUS_EXT_API_localStorage.getItem( keys[i] );
+        }
+        callback(archive);
     },
-    set() {
+    set(toSet, callback) {
         console.log("Redirected chrome.storage.set");
     }
 }
@@ -21,4 +30,4 @@ chrome.storage.sync = c_s_sync;
 chrome.runtime.getManifest = c_r_getManifest;
 chrome.runtime.getURL = c_r_getURL;
 
-createElement = document.createElement
+createElement = document.createElement;
