@@ -8,7 +8,7 @@ const c_storage = {
 let SPLUS_EXT_API_localStorage = window.localStorage;
 const c_s_sync = {
     get(toGet, callback) {
-        console.debug("SPlusStubs: Redirected chrome.storage.get");
+        console.debug("SPlusStubs: Redirected chrome.storage.sync.get");
         var archive = {},
             keys = Object.keys(SPLUS_EXT_API_localStorage),
             i = keys.length;
@@ -26,15 +26,25 @@ const c_s_sync = {
         callback(archive);
     },
     set(toSet, callback) {
-        console.debug("SPlusStubs: Redirected chrome.storage.set");
+        console.debug("SPlusStubs: Redirected chrome.storage.sync.set");
         for (const [key, value] of Object.entries(toSet)) {
           console.debug("SPlusStubs: setting key " + key + "to value: "+value);
             SPLUS_EXT_API_localStorage.setItem(key, JSON.stringify(value));
         }
+    },
+    remove(toSet, callback) {
+        console.debug("SPlusStubs: Redirected chrome.storage.sync.remove");
+        if (typeof toSet === 'string' || toSet instanceof String) {
+            SPLUS_EXT_API_localStorage.removeItem(toSet);
+        } else {
+            for (const toRemove of toSet) {
+                SPLUS_EXT_API_localStorage.removeItem(toRemove);
+            }
+        }
     }
 }
 function c_r_getManifest() {
-    return {'version_name': 'Bookmarklet (7.4.2)'}
+    return {'version_name': 'Bookmarklet (7.4.2)', 'version': 'Bookmarklet (7.4.2)'}
 }
 function c_r_getURL(ext_url) {
     console.debug("SPlusStubs: Redirected chrome.runtime.getURL");
