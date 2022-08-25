@@ -44,7 +44,7 @@ const c_s_sync = {
     }
 }
 function c_r_getManifest() {
-    return {'version_name': '2.1 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
+    return {'version_name': '3.0 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
 }
 function c_r_getURL(ext_url) {
     console.debug("SPlusStubs: Redirected chrome.runtime.getURL");
