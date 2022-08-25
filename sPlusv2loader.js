@@ -366,7 +366,7 @@
         // exclude_matches
         let SPLUSexclude_matches = SPLUScontent_script.exclude_matches;
         var SPLUScurrentAddress = window.location.href;
-        if(SPLUSloaderAddressOverride != undefined) {
+        if(typeof SPLUSloaderAddressOverride != 'undefined') {
             SPLUScurrentAddress = SPLUSloaderAddressOverride;
         }
         let SPLUScurrentAddressMatches = false;
