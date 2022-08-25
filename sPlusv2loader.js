@@ -1,7 +1,7 @@
 (async function() {
     // +++++++++++++++++++++++++++++++++++++++++++++ CONFIG +++++++++++++++++++++++++++++++++++++++++++++++++
     // Where this script is hosted. used to properly inject extension's files
-    var SPLUSbase_url = /*'https://splus-bookmarklet.vercel.app/'*/ 'http://localhost:8080/';
+    var SPLUSbase_url = 'https://splus-bookmarklet.vercel.app/' /*'http://localhost:8080/'*/;
     // Where extension API stubs are defined.
     var SPLUSext_apis_file = "js/extension-apis.js"
 
