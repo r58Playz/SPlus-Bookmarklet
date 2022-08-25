@@ -365,7 +365,10 @@
         }
         // exclude_matches
         let SPLUSexclude_matches = SPLUScontent_script.exclude_matches;
-        let SPLUScurrentAddress = window.location.href;
+        var SPLUScurrentAddress = window.location.href;
+        if(SPLUSloaderAddressOverride != undefined) {
+            SPLUScurrentAddress = SPLUSloaderAddressOverride;
+        }
         let SPLUScurrentAddressMatches = false;
         let SPLUScurrentAddressIsExcluded = false;
         // check matches
