@@ -168,6 +168,17 @@ video.easter-egg {
     overflow: auto;
 }
 
+.splus-theme-editor-modal {
+    height: 75%;
+    width: 75%;
+}
+
+.splus-theme-editor-modal-contents {
+    height: 100%;
+    width: 100%;
+}
+
+
 @-webkit-keyframes animatetop {
     from {
         top: -300px;

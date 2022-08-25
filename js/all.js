@@ -426,8 +426,8 @@ let modals = [
     new Modal(
         "theme-editor-modal",
         "Schoology Plus Theme Editor",
-        createElement("div", ["splus-modal-contents"], {}, [
-            createElement("object", [], { data: chrome.runtime.getURL("theme-editor.html") })
+        createElement("div", ["splus-theme-editor-modal"], {}, [
+            createElement("object", ["splus-theme-editor-modal-contents"], { data: chrome.runtime.getURL("theme-editor.html") })
         ]),
         modalFooterText
     )
