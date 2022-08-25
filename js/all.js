@@ -1145,7 +1145,7 @@ async function createQuickAccess() {
         if (err === "noapikey") {
             wrapper.appendChild(createElement("div", ["quick-access-no-api"], { }, [
                 createElement("p", [], { textContent: "Please grant access to your enrolled courses in order to use this feature. Have both your API key and secret copied before clicking." }),
-                createButton("quick-access-grant-access", "Grant Access", () => {changeApiKeyStatus(); }),
+                createButton("quick-access-grant-access", "Grant Access", () => {location.pathname = "/api";}),
             ]));
         } else {
             throw err;
