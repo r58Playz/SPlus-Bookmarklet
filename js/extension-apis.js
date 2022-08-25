@@ -1,5 +1,5 @@
 // IMPORTANT!!!! SET THIS TO WHERE YOU ARE HOSTING THIS!!!!!
-let SPlusStubs_hosting_url = 'https://splus-bookmarklet.vercel.app/';
+let SPlusStubs_hosting_url = /*'https://splus-bookmarklet.vercel.app/'*/ 'http://localhost:8080/';
 
 // non-extension impl of chrome.storage and chrome.runtime
 const c_storage = {
@@ -44,7 +44,7 @@ const c_s_sync = {
     }
 }
 function c_r_getManifest() {
-    return {'version_name': 'Bookmarklet (7.4.2)', 'version': 'Bookmarklet (7.4.2)'}
+    return {'version_name': '2.1 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
 }
 function c_r_getURL(ext_url) {
     console.debug("SPlusStubs: Redirected chrome.runtime.getURL");

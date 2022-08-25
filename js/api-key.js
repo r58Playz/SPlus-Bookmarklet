@@ -23,6 +23,7 @@
 
             Setting.setValue("apikey", key, () => {
                 Setting.setValue("apisecret", secret, () => {
+                    alert(getUserId());
                     Setting.setValue("apiuser", getUserId(), () => {
                         Setting.setValue("apistatus", "allowed", () => {
                             location.pathname = "/";

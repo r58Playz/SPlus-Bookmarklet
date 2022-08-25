@@ -25,11 +25,13 @@
 })();
 
 function changeApiKeyStatus() {
+    var uid = getUserId();
+    alert(uid);
     var key = prompt("Paste in your Schoology API key here.");
     var secret = prompt("Paste in your Schoology API secret here.");
     Setting.setValue("apikey", key, () => {
         Setting.setValue("apisecret", secret, () => {
-            Setting.setValue("apiuser", getUserId(), () => {
+            Setting.setValue("apiuser", uid, () => {
                 Setting.setValue("apistatus", "allowed", () => {
                     alert("Done.");
                 });
@@ -1142,8 +1144,8 @@ async function createQuickAccess() {
     } catch (err) {
         if (err === "noapikey") {
             wrapper.appendChild(createElement("div", ["quick-access-no-api"], { }, [
-                createElement("p", [], { textContent: "Please grant access to your enrolled courses in order to use this feature." }),
-                createButton("quick-access-grant-access", "Grant Access", () => {location.pathname = "/api"; }),
+                createElement("p", [], { textContent: "Please grant access to your enrolled courses in order to use this feature. Have both your API key and secret copied before clicking." }),
+                createButton("quick-access-grant-access", "Grant Access", () => {changeApiKeyStatus(); }),
             ]));
         } else {
             throw err;
