@@ -422,6 +422,14 @@ let modals = [
             })()
         ]),
         modalFooterText
+    ),
+    new Modal(
+        "theme-editor-modal",
+        "Schoology Plus Theme Editor",
+        createElement("div", ["splus-modal-contents"], {}, [
+            createElement("object", [], { data: chrome.runtime.getURL("theme-editor.html") })
+        ]),
+        modalFooterText
     )
 ];
 

@@ -424,7 +424,7 @@ function updateSettings(callback) {
                     "button",
                     {},
                     value => value || "Schoology Plus",
-                    event => location.href = chrome.runtime.getURL("/theme-editor.html"),
+                    event => openModal('theme-editor-modal'),
                     element => element.value
                 ).control,
                 new Setting(
@@ -816,8 +816,13 @@ function updateSettings(callback) {
                         createElement("a", [], { href: "#", textContent: "Open Theme Changer Modal", onclick: () => openModal("choose-theme-modal"), style: { fontSize: "" } })
                     ]),
                     createElement("p", ["setting-description"], { textContent: "Open the Theme Changer modal shown on first start." })
+                ]),
+                createElement("div", ["setting-entry"], {}, [
+                    createElement("h2", ["setting-title"], {}, [
+                        createElement("a", [], { href: "#", textContent: "Open Theme Editor Modal", onclick: () => openModal("theme-editor-modal"), style: { fontSize: "" } })
+                    ]),
+                    createElement("p", ["setting-description"], { textContent: "Open the Theme Editor modal [BOOKMARKLET ONLY]." })
                 ])
-
             ]),
             createElement("div", ["settings-buttons-wrapper"], undefined, [
                 createButton("save-settings", "Save Settings", () => Setting.saveModified()),
