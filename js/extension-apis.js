@@ -44,7 +44,7 @@ const c_s_sync = {
     }
 }
 function c_r_getManifest() {
-    return {'version_name': '3.0 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
+    return {'version_name': '3.1 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
 }
 function c_r_getURL(ext_url) {
     console.debug("SPlusStubs: Redirected chrome.runtime.getURL");
@@ -52,7 +52,9 @@ function c_r_getURL(ext_url) {
 }
 chrome.storage = c_storage;
 chrome.storage.sync = c_s_sync;
+if (typeof chrome.runtime === 'undefined') {
+    chrome.runtime = {};
+}
 chrome.runtime.getManifest = c_r_getManifest;
 chrome.runtime.getURL = c_r_getURL;
 
-createElement = document.createElement;
