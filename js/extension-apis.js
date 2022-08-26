@@ -8,7 +8,7 @@ const c_storage = {
 let SPLUS_EXT_API_localStorage = window.localStorage;
 const c_s_sync = {
     get(toGet, callback) {
-        console.debug("SPlusStubs: Redirected chrome.storage.sync.get");
+        console.debug("ExtAPIStubs: Redirected chrome.storage.sync.get");
         var archive = {},
             keys = Object.keys(SPLUS_EXT_API_localStorage),
             i = keys.length;
@@ -23,17 +23,27 @@ const c_s_sync = {
             }
             archive[ keys[i] ] = parsedItem;
         }
+        if (toGet){
+            if (toGet.constructor == Object) {
+                for (const [key, value] of Object.entries(toGet)) {
+                    if (!(key in archive)) {
+                        console.debug("ExtAPIStubs: chrome.storage.sync.get: Set provided default value for "+key+"to value: "+value);
+                        archive[key] = value;
+                    }
+                }
+            }
+        }
         callback(archive);
     },
     set(toSet, callback) {
-        console.debug("SPlusStubs: Redirected chrome.storage.sync.set");
+        console.debug("ExtAPIStubs: Redirected chrome.storage.sync.set");
         for (const [key, value] of Object.entries(toSet)) {
-          console.debug("SPlusStubs: setting key " + key + "to value: "+value);
+          console.debug("ExtAPIStubs: setting key " + key + "to value: "+value);
             SPLUS_EXT_API_localStorage.setItem(key, JSON.stringify(value));
         }
     },
     remove(toSet, callback) {
-        console.debug("SPlusStubs: Redirected chrome.storage.sync.remove");
+        console.debug("ExtAPIStubs: Redirected chrome.storage.sync.remove");
         if (typeof toSet === 'string' || toSet instanceof String) {
             SPLUS_EXT_API_localStorage.removeItem(toSet);
         } else {
@@ -43,11 +53,12 @@ const c_s_sync = {
         }
     }
 }
+// SET YOUR MANIFEST DATA HERE!
 function c_r_getManifest() {
     return {'version_name': '3.1 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
 }
 function c_r_getURL(ext_url) {
-    console.debug("SPlusStubs: Redirected chrome.runtime.getURL");
+    console.debug("ExtAPIStubs: Redirected chrome.runtime.getURL");
     return SPlusStubs_hosting_url + ext_url
 }
 chrome.storage = c_storage;
