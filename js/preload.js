@@ -174,40 +174,6 @@ async function fetchApiJson(path) {
 }
 
 /**
- * Creates a DOM element
- * @returns {HTMLElement} A DOM element
- * @param {string} tag - The HTML tag name of the type of DOM element to create
- * @param {string[]} classList - CSS classes to apply to the DOM element
- * @param {Object.<string,any>} properties - Properties to apply to the DOM element
- * @param {HTMLElement[]} children - Elements to append as children to the created element
- */
-function createElement(tag, classList, properties, children) {
-    let element = document.createElement(tag);
-    if (classList) {
-        for (let c of classList) {
-            element.classList.add(c);
-        }
-    }
-    if (properties) {
-        for (let property in properties) {
-            if (properties[property] instanceof Object && !(properties[property] instanceof Function)) {
-                for (let subproperty in properties[property]) {
-                    element[property][subproperty] = properties[property][subproperty];
-                }
-            } else if (property !== undefined && properties[property] !== undefined) {
-                element[property] = properties[property];
-            }
-        }
-    }
-    if (children) {
-        for (let child of children) {
-            element.appendChild(child);
-        }
-    }
-    return element;
-}
-
-/**
  * Creates a Schoology Plus themed button element
  * @param {string} id The ID for the button element
  * @param {string} text The text to show on the button

@@ -1600,7 +1600,7 @@ $(document).ready(function () {
                 },
                 onclick: e => {
                     e.stopPropagation();
-                    ConfirmModal.open("Apply Theme?", `Are you sure you want to apply the theme ${t}?`, ["Apply", "Cancel"], b => {
+                    ConfirmModal.open("Apply Theme?", `Are you sure you want to apply the theme ${t}? (You need to reload Schoology Plus afterwards!)`, ["Apply", "Cancel"], b => {
                         if (b === "Apply") {
                             trackEvent(`Theme: ${t}`, "apply", "Theme List");
                             chrome.storage.sync.set({ theme: t }, () => location.href = `https://${defaultDomain}`);

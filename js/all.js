@@ -426,12 +426,23 @@ let modals = [
     new Modal(
         "theme-editor-modal",
         "Schoology Plus Theme Editor",
-        createElement("div", ["splus-theme-editor-modal"], {}, [
-            createElement("object", ["splus-theme-editor-modal-contents"], { data: chrome.runtime.getURL("theme-editor.html") })
+        createElement("div", ["splus-modal-contents"], {}, [
+            createElement("iframe", [], { src: "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage", id: "splus-trick-user-theme-editor-iframe"})
         ]),
         modalFooterText
     )
 ];
+ 
+(async function () {
+    var themeEditorResponse = await fetch(chrome.runtime.getURL("theme-editor.html"));
+    var themeEditorSource = await themeEditorResponse.text();
+    var iframeInject = document.getElementById("splus-trick-user-theme-editor-iframe");
+    var doc = iframeInject.contentWindow.document;
+    console.log(themeEditorSource);
+    doc.open();
+    doc.write(themeEditorSource);
+    doc.close();
+})();
 
 (() => {
     // Run when new version installed
