@@ -1,5 +1,6 @@
 # Schoology Plus Bookmarklet
 
+A bookmarklet loader for Schoology Plus. WIP, does not support API yet (cors).
 
 # Original README
 [![Schoology Plus](https://imgur.com/QdAPxXN.png)](https://schoologypl.us)
