@@ -2,6 +2,11 @@
 
 A bookmarklet loader for Schoology Plus. WIP, does not support API yet (cors).
 
+V3 bookmarklet:
+```
+javascript:(function(P){var D=document,B=D.createElement('body'),F=D.createElement('iframe');F.onload=function(){var w=this.contentWindow,d=w.document;history.replaceState({},D.title=d.title,w.location.href);P(w,d)};D.body.parentNode.replaceChild(B,D.body);B.parentNode.style.cssText=B.style.cssText=(F.style.cssText='width:100%;height:100%;margin:0;padding:0;border:0;')+'overflow:hidden;';B.appendChild(F).contentWindow.location.replace(D.URL)}(function(W,D){let urls=["https://splus-bookmarklet.vercel.app/sPlusv2loader.js"];for(const urla of urls){var url=urla;var type=url.match(/\s?module\s?/)?%27module%27:%27text/javascript%27;url=url.replace(/\s?module\s?/,%27%27);var x=document.createElement(%27script%27);x.setAttribute(%27src%27,url);x.setAttribute(%27type%27,type);D.querySelector(%27head%27).appendChild(x)}}));
+```
+
 # Original README
 [![Schoology Plus](https://imgur.com/QdAPxXN.png)](https://schoologypl.us)
 
@@ -275,4 +280,3 @@ Schoology Plus respects your privacy and will NEVER collect or sell your persona
 # Disclaimer
 
 Schoology Plus is not affiliated with Schoology Inc. or the Los Angeles Unified School District. Schoology, the SCHOOLOGY® wordmark, and the S logo are registered and unregistered trademarks of Schoology, Inc. in the United States. All product names, logos, and brands are property of their respective owners.
->>>>>>> f534f3a (sPlusLoaderv2)
