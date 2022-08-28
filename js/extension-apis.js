@@ -55,7 +55,7 @@ const c_s_sync = {
 }
 // SET YOUR MANIFEST DATA HERE!
 function c_r_getManifest() {
-    return {'version_name': '3.1 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
+    return {'version_name': '4.0 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
 }
 function c_r_getURL(ext_url) {
     console.debug("ExtAPIStubs: Redirected chrome.runtime.getURL");
