@@ -1,6 +1,6 @@
 # Schoology Plus Bookmarklet
 
-A bookmarklet loader for Schoology Plus. WIP, does not support API yet (cors).
+A bookmarklet loader for Schoology Plus. Full feature parity with original.
 
 V3 bookmarklet:
 ```
