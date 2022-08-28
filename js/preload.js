@@ -137,7 +137,7 @@ var preload_schoologyPlusApiRateLimitedFetch = createFetchRateLimitWrapper(13, 5
  * @param {string} path The API path, e.g. "/sections/12345/assignments/12"
  */
 function fetchApi(path) {
-    return fetchWithApiAuthentication(`https://api.schoology.com/v1/${path}`);
+    return fetchWithApiAuthentication(`https://schoology-api-proxy.vercel.app/api/v1?apiAddress=${path}`);
 }
 
 /**

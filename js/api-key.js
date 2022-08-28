@@ -6,7 +6,7 @@
     await loadDependencies("api-key", ["all"]);
 })();
 
-(function () {
+(async function () {
     let currentKey = document.getElementById("edit-current-key");
     let currentSecret = document.getElementById("edit-current-secret");
 
@@ -20,16 +20,23 @@
             let secret = currentSecret.value;
 
             trackEvent("Change Access", "allowed", "API Key");
+            console.log("API secret revealed.")
 
             Setting.setValue("apikey", key, () => {
-                Setting.setValue("apisecret", secret, () => {
-                    Setting.setValue("apiuser", getUserId(), () => {
-                        Setting.setValue("apistatus", "allowed", () => {
-                            location.pathname = "/";
-                        });
-                    });
-                });
+                alert('Saved apikey.')
             });
+            Setting.setValue("apisecret", secret,  () => {
+                alert('Saved apisecret.')
+            });
+            Setting.setValue("apiuser", getUserId());
+            Setting.setValue("apistatus", "allowed", () => {
+                alert('Set apistatus to allowed.')
+            });
+            try {
+                await getApiKeysDirect();
+            } catch (err) {
+                alert("Failed to get API keys. You may have saved them but Schoology Plus cannot find them.")
+            }
         }
     }
 
