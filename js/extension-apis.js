@@ -69,35 +69,6 @@ if (typeof chrome.runtime === 'undefined') {
 chrome.runtime.getManifest = c_r_getManifest;
 chrome.runtime.getURL = c_r_getURL;
 
-const sApiIframe = document.createElement("iframe");
-sApiIframe.style.display = "none";
-sApiIframe.src = "https://api.schoology.com/v1/";
-document.body.appendChild(sApiIframe);
-
-(async function () {
-    let fetchProxyResponse = await fetch(c_r_getURL("fetch-proxy.html"));
-    let fetchProxyText = await fetchProxyResponse.text();
-    sApiIframe.contentWindow.document.open();
-    sApiIframe.contentWindow.document.write(fetchProxyText);
-    sApiIframe.contentWindow.document.close();
-})();
-function fetchApiProxy(urlIn, paramsIn, callbackIn) {
-    let fixedCallbackIn = encodeURI(callbackIn.toString())
-    sApiIframe.contentWindow.postMessage({url: urlIn, params: paramsIn, callback: fixedCallbackIn});
-}
-window.addEventListener("message", (event) => {
-    let type = event.data.type
-    if(type == "fetch-response") {
-        let callback = new Function('return ' + decodeURI(event.data.callback))();
-        callback(event.data.responseObj);
-    }
-});
-fetchApiProxy("https://api.schoology.com/v1/",undefined, (response) => {
-    response.text().then((value) => {
-        console.log(value);
-    });
-});
-
 function SPLUS_EXT_API_CALLBACK(request, sender, sendResponse) {
     if (request.type == "fetch" && request.url !== undefined) {
         Logger.debug("Received fetch request for " + request.url);
