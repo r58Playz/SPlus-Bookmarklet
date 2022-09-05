@@ -9,17 +9,6 @@
         var re = new RegExp(pattern.replace(/([.?+^$[\]\\(){}|\/-])/g, "\\$1").replace(/\*/g, '.*'));
         return re.test(input);
     }
-    
-    async function fetchCached(url) {
-        if (url in window.sessionStorage) {
-            return window.sessionStorage.getItem(url);
-        } else {
-            var fetchRespose = await fetch(SPLUSextApijsUrl);
-            var fetchText = await fetchRespose.text();
-            window.sessionStorage.setItem(url, fetchText);
-            return fetchText;
-        }
-    }
 
 
     var SPLUScontent_scripts = [
@@ -359,7 +348,8 @@
     // inject
     var SPLUSextApiscriptTag = document.createElement('script');
     console.debug("SPLUSLoader: Downloading extension apis");
-    SPLUSextApifetchText = await fetchCached(SPLUSextApijsUrl);
+    var SPLUSextApifetchResponse = await fetch(SPLUSextApijsUrl);
+    SPLUSextApifetchText = await SPLUSextApifetchResponse.text();
     SPLUSextApiscriptTag.innerHTML = SPLUSextApifetchText;
     document.querySelector('head').appendChild(SPLUSextApiscriptTag);
     console.log("SPLUSLoader: Injected extension apis");
@@ -412,7 +402,8 @@
                     // inject
                     var SPLUSscriptTag = document.createElement('script');
                     console.debug("SPLUSLoader: Downloading file at "+SPLUSjsUrl);
-                    SPLUSfetchText = await fetchCached(SPLUSjsUrl);
+                    var SPLUSfetchResponse = await fetch(SPLUSjsUrl);
+                    SPLUSfetchText = await SPLUSfetchResponse.text();
                     SPLUSscriptTag.innerHTML = SPLUSfetchText;
                     document.querySelector('head').appendChild(SPLUSscriptTag);
                     console.log("SPLUSLoader: Injected file at "+SPLUSjsUrl);
@@ -429,7 +420,8 @@
                 // inject
                 var SPLUSstyleTag = document.createElement('style');
                 console.debug("SPLUSLoader: Downloading file at "+SPLUScssUrl);
-                SPLUSfetchText = await fetchCached(SPLUScssUrl);
+                var SPLUSfetchResponse = await fetch(SPLUScssUrl);
+                SPLUSfetchText = await SPLUSfetchResponse.text();
                 SPLUSstyleTag.innerHTML = SPLUSfetchText;
                 document.querySelector('head').appendChild(SPLUSstyleTag);
                 console.log("SPLUSLoader: Injected file at "+SPLUScssUrl);
