@@ -120,3 +120,16 @@ function c_r_sendMessage(request, callback) {
 }
 
 chrome.runtime.sendMessage = c_r_sendMessage;
+
+
+/**
+ * Tracks an event using Google Analytics if the user did not opt out
+ * NOTE: The Firefox version of the extension has no support for Google Analytics
+ * @param {string} target (Event Category) The target of the event
+ * @param {string} action (Event Action) The action of the event
+ * @param {string} [label] (Event Label) Used to group related events
+ * @param {number} [value] Numeric value associated with the event
+ */
+var trackEvent = function (target, action, label = undefined, value = undefined) {
+    console.debug("[S+] Tracking disabled by user", { target, action, label, value });
+};

@@ -40,8 +40,6 @@
             "js": [
                 "js/predefs.js",
                 "js/loader.js",
-                "js/analytics.js",
-                "lib/js/analytics.js",
                 "js/icons.js",
                 "js/default-themes.js",
                 "js/theme.js",
