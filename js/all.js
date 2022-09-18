@@ -438,7 +438,7 @@ function reloadThemeEditor() {
         var themeEditorResponse = await fetch(chrome.runtime.getURL("theme-editor.html"));
         var themeEditorSource = await themeEditorResponse.text();
         var iframeInject = document.getElementById("splus-trick-user-theme-editor-iframe");
-        iframeInject.src += '';
+        iframeInject.contentWindow.location.reload(true);  
         var doc = iframeInject.contentWindow.document;
         doc.open();
         doc.write(themeEditorSource);
