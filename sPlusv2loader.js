@@ -447,18 +447,9 @@
                 notifdiv.innerHTML = "SPLUSLoader: Injected " + SPLUScssFile
             }
         }
-        notifdiv.innerHTML = "Loaded S+! 3";
+        notifdiv.innerHTML = "Loaded S+! bye bye";
         setTimeout(function () {
-            notifdiv.innerHTML = "Loaded S+! 2";
-            setTimeout(function () {
-                notifdiv.innerHTML = "Loaded S+! 1";
-                setTimeout(function () {
-                    notifdiv.innerHTML = "Loaded S+! 0";
-                    setTimeout(function () {
-                        notifdiv.innerHTML = "Loaded S+! bye";
-                    }, (1000));
-                }, (1000));
-            }, (1000));
+            notifdiv.remove();
         }, (1000));
     }
 })();
