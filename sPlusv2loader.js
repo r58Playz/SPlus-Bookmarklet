@@ -368,12 +368,12 @@
     var SPLUSextApijsUrl = SPLUSbase_url + SPLUSext_apis_file;
     // inject
     var SPLUSextApiscriptTag = document.createElement('script');
-    logInjectStatus("SPLUSLoader: Downloading extension apis");
+    logInjectStatus("Downloading extension apis");
     var SPLUSextApifetchResponse = await fetch(SPLUSextApijsUrl);
     SPLUSextApifetchText = await SPLUSextApifetchResponse.text();
     SPLUSextApiscriptTag.innerHTML = SPLUSextApifetchText;
     document.querySelector('head').appendChild(SPLUSextApiscriptTag);
-    logInjectStatus("SPLUSLoader: Injected extension apis");
+    logInjectStatus("Injected extension apis");
 
     var SPLUSscripts_injected = [];
 
@@ -395,7 +395,7 @@
         // check matches
         for (const SPLUSaddress of SPLUSmatches) {
             let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-            cDebug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "matches" : "does not match") + " the glob " + SPLUSaddress);
+            cDebug("current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "matches" : "does not match") + " the glob " + SPLUSaddress);
             if (!SPLUScurrentAddressMatches) {
                 SPLUScurrentAddressMatches = SPLUSaddressMatches;
             }
@@ -403,14 +403,14 @@
         if (SPLUSexclude_matches != undefined) {
             for (const SPLUSaddress of SPLUSexclude_matches) {
                 let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-                cDebug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "is excluded by" : "is not excluded by") + " the glob " + SPLUSaddress);
+                cDebug("current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "is excluded by" : "is not excluded by") + " the glob " + SPLUSaddress);
                 if (!SPLUScurrentAddressIsExcluded) {
                     SPLUScurrentAddressIsExcluded = SPLUSaddressMatches;
                 }
             }
         }
         if (!SPLUScurrentAddressMatches || SPLUScurrentAddressIsExcluded) {
-            cDebug("SPLUSLoader: current address matches: " + SPLUScurrentAddressMatches + " is excluded: " + SPLUScurrentAddressIsExcluded);
+            cDebug("current address matches: " + SPLUScurrentAddressMatches + " is excluded: " + SPLUScurrentAddressIsExcluded);
             continue;
         }
         // js
@@ -422,17 +422,17 @@
                     var SPLUSjsUrl = SPLUSbase_url + SPLUSjsFile;
                     // inject
                     var SPLUSscriptTag = document.createElement('script');
-                    cDebug("SPLUSLoader: Downloading file at " + SPLUSjsUrl);
-                    notifdiv.innerHTML = "SPLUSLoader: DLing " + SPLUSjsFile
+                    cDebug("Downloading file at " + SPLUSjsUrl);
+                    notifdiv.innerHTML = "DLing " + SPLUSjsFile
                     var SPLUSfetchResponse = await fetch(SPLUSjsUrl);
                     SPLUSfetchText = await SPLUSfetchResponse.text();
                     SPLUSscriptTag.innerHTML = SPLUSfetchText;
                     document.querySelector('head').appendChild(SPLUSscriptTag);
-                    cLog("SPLUSLoader: Injected file at " + SPLUSjsUrl);
-                    notifdiv.innerHTML = "SPLUSLoader: Injected " + SPLUSjsFile
+                    cLog("Injected file at " + SPLUSjsUrl);
+                    notifdiv.innerHTML = "Injected " + SPLUSjsFile
                 } else {
-                    cLog("SPLUSLoader: Skipped file at " + SPLUSjsUrl + " because it is already loaded");
-                    notifdiv.innerHTML = "SPLUSLoader: Skipped " + SPLUSjsFile
+                    cLog("Skipped file at " + SPLUSjsUrl + " because it is already loaded");
+                    notifdiv.innerHTML = "Skipped " + SPLUSjsFile
                 }
             }
         }
@@ -443,14 +443,14 @@
                 var SPLUScssUrl = SPLUSbase_url + SPLUScssFile
                 // inject
                 var SPLUSstyleTag = document.createElement('style');
-                cDebug("SPLUSLoader: Downloading file at " + SPLUScssUrl);
-                notifdiv.innerHTML = "SPLUSLoader: DLing " + SPLUScssFile
+                cDebug("Downloading file at " + SPLUScssUrl);
+                notifdiv.innerHTML = "DLing " + SPLUScssFile
                 var SPLUSfetchResponse = await fetch(SPLUScssUrl);
                 SPLUSfetchText = await SPLUSfetchResponse.text();
                 SPLUSstyleTag.innerHTML = SPLUSfetchText;
                 document.querySelector('head').appendChild(SPLUSstyleTag);
-                cLog("SPLUSLoader: Injected file at " + SPLUScssUrl);
-                notifdiv.innerHTML = "SPLUSLoader: Injected " + SPLUScssFile
+                cLog("Injected file at " + SPLUScssUrl);
+                notifdiv.innerHTML = "Injected " + SPLUScssFile
             }
         }
         notifdiv.innerHTML = "Loaded S+! bye bye";
