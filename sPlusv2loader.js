@@ -450,6 +450,6 @@
         notifdiv.innerHTML = "Loaded S+! bye bye";
         setTimeout(function () {
             notifdiv.remove();
-        }, (1000));
+        }, (5000));
     }
 })();
