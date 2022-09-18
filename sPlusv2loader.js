@@ -7,7 +7,7 @@
 
     var notifdiv = document.createElement('div');
     notifdiv.style.setProperty("z-index", "99999");
-    notifdiv.style.setProperty("position", "absolute");
+    notifdiv.style.setProperty("position", "fixed");
     notifdiv.style.setProperty("bottom", "0.5em");
     notifdiv.style.setProperty("left", "1em");
     notifdiv.style.setProperty("background-color", "#ffffff");
