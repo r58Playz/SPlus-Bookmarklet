@@ -37,6 +37,11 @@ function createElement(tag, classList, properties, children) {
  */
 let __settings = {};
 
+__storage = {};
+chrome.storage.sync.get(null, storageContents => {
+    __storage = storageContents;
+});
+
 /**
  * Creates a setting, appends it to the settings list
  * @param {string} name - The name of the setting, to be stored in extension settings
