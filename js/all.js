@@ -324,7 +324,7 @@ let modals = [
             ]),
             createElement("h2", ["setting-entry"], { textContent: "Icons and Images" }),
             createElement("div", ["setting-entry"], {}, [
-                
+
                 createElement("ul", ["contributor-list"], {
                     style: { listStyle: "inside" },
                     innerHTML: (function (contribs) {
@@ -427,21 +427,24 @@ let modals = [
         "theme-editor-modal",
         "Schoology Plus Theme Editor",
         createElement("div", ["splus-modal-contents"], {}, [
-            createElement("iframe", [], { src: "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage", id: "splus-trick-user-theme-editor-iframe"})
+            createButton("splus-theme-editor-modal-reload", "Reload the theme editor", reloadThemeEditor),
+            createElement("iframe", [], { src: "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage", id: "splus-trick-user-theme-editor-iframe" })
         ]),
         modalFooterText
     )
 ];
- 
-(async function () {
-    var themeEditorResponse = await fetch(chrome.runtime.getURL("theme-editor.html"));
-    var themeEditorSource = await themeEditorResponse.text();
-    var iframeInject = document.getElementById("splus-trick-user-theme-editor-iframe");
-    var doc = iframeInject.contentWindow.document;
-    doc.open();
-    doc.write(themeEditorSource);
-    doc.close();
-})();
+function reloadThemeEditor() {
+    (async function () {
+        var themeEditorResponse = await fetch(chrome.runtime.getURL("theme-editor.html"));
+        var themeEditorSource = await themeEditorResponse.text();
+        var iframeInject = document.getElementById("splus-trick-user-theme-editor-iframe");
+        var doc = iframeInject.contentWindow.document;
+        doc.open();
+        doc.write(themeEditorSource);
+        doc.close();
+    })();
+}
+reloadThemeEditor();
 
 (() => {
     // Run when new version installed
@@ -1161,9 +1164,9 @@ async function createQuickAccess() {
         }
     } catch (err) {
         if (err === "noapikey") {
-            wrapper.appendChild(createElement("div", ["quick-access-no-api"], { }, [
+            wrapper.appendChild(createElement("div", ["quick-access-no-api"], {}, [
                 createElement("p", [], { textContent: "Please grant access to your enrolled courses in order to use this feature. Have both your API key and secret copied before clicking." }),
-                createButton("quick-access-grant-access", "Grant Access", () => {location.pathname = "/api";}),
+                createButton("quick-access-grant-access", "Grant Access", () => { location.pathname = "/api"; }),
             ]));
         } else {
             throw err;

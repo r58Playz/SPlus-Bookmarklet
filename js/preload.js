@@ -5,7 +5,7 @@
     }
     await loadDependencies("preload", ["loader"]);
 })();
- 
+
 // Process options
 Logger.log(`Loaded Schoology Plus.`);
 var firstLoad = true;
@@ -137,7 +137,7 @@ var preload_schoologyPlusApiRateLimitedFetch = createFetchRateLimitWrapper(13, 5
  * @param {string} path The API path, e.g. "/sections/12345/assignments/12"
  */
 function fetchApi(path) {
-    return fetchWithApiAuthentication(`https://schoology-api-proxy.vercel.app/api/v1?apiAddress=${path}`);
+    return fetchWithApiAuthentication(`https://sch-proxy.r58playz.ml/api/v1?apiAddress=${path}`);
 }
 
 /**
@@ -767,7 +767,7 @@ function updateSettings(callback) {
                 ).control,
                 createElement("div", ["setting-entry"], {}, [
                     createElement("h2", ["setting-title"], {}, [
-                        createElement("a", [], { href: "#", textContent: "Change Schoology Account Access", onclick: () => {changeApiKeyStatus();}, style: { fontSize: "" } })
+                        createElement("a", [], { href: "#", textContent: "Change Schoology Account Access", onclick: () => { changeApiKeyStatus(); }, style: { fontSize: "" } })
                     ]),
                     createElement("p", ["setting-description"], { textContent: "Grant Schoology Plus access to your Schoology API Key so many features can function, or revoke that access. Have both your API key and secret copied before clicking, you cannot unfocus this tab without canceling this." })
                 ]),
