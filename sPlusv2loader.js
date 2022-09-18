@@ -17,6 +17,11 @@
     notifdiv.id = "SPLUS_NOTIF_DIV";
     document.body.appendChild(notifdiv);
     document.querySelector("link[rel='shortcut icon']").href = SPLUSbase_url + "imgs/icon@1024.png"
+    var cLog = console.log.bind(window.console, "%c+", lp());
+    var cDebug = console.debug.bind(window.console, "%c+", lp());
+    function lp() {
+        return `color:#FFA500;border:1px solid #2A2A2A;border-radius:100%;font-size:14px;font-weight:bold;padding: 0 4px 0 4px;background-color:#2A2A2A`;
+    }
 
     function SPLUSglob(pattern, input) {
         var re = new RegExp(pattern.replace(/([.?+^$[\]\\(){}|\/-])/g, "\\$1").replace(/\*/g, '.*'));
@@ -24,7 +29,7 @@
     }
 
     function logInjectStatus(toLog) {
-        console.log(toLog);
+        cLog(toLog);
         notifdiv.innerHTML = toLog;
     }
 
@@ -390,7 +395,7 @@
         // check matches
         for (const SPLUSaddress of SPLUSmatches) {
             let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-            console.debug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "matches" : "does not match") + " the glob " + SPLUSaddress);
+            cDebug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "matches" : "does not match") + " the glob " + SPLUSaddress);
             if (!SPLUScurrentAddressMatches) {
                 SPLUScurrentAddressMatches = SPLUSaddressMatches;
             }
@@ -398,14 +403,14 @@
         if (SPLUSexclude_matches != undefined) {
             for (const SPLUSaddress of SPLUSexclude_matches) {
                 let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-                console.debug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "is excluded by" : "is not excluded by") + " the glob " + SPLUSaddress);
+                cDebug("SPLUSLoader: current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "is excluded by" : "is not excluded by") + " the glob " + SPLUSaddress);
                 if (!SPLUScurrentAddressIsExcluded) {
                     SPLUScurrentAddressIsExcluded = SPLUSaddressMatches;
                 }
             }
         }
         if (!SPLUScurrentAddressMatches || SPLUScurrentAddressIsExcluded) {
-            console.debug("SPLUSLoader: current address matches: " + SPLUScurrentAddressMatches + " is excluded: " + SPLUScurrentAddressIsExcluded);
+            cDebug("SPLUSLoader: current address matches: " + SPLUScurrentAddressMatches + " is excluded: " + SPLUScurrentAddressIsExcluded);
             continue;
         }
         // js
@@ -417,16 +422,16 @@
                     var SPLUSjsUrl = SPLUSbase_url + SPLUSjsFile;
                     // inject
                     var SPLUSscriptTag = document.createElement('script');
-                    console.debug("SPLUSLoader: Downloading file at " + SPLUSjsUrl);
+                    cDebug("SPLUSLoader: Downloading file at " + SPLUSjsUrl);
                     notifdiv.innerHTML = "SPLUSLoader: DLing " + SPLUSjsFile
                     var SPLUSfetchResponse = await fetch(SPLUSjsUrl);
                     SPLUSfetchText = await SPLUSfetchResponse.text();
                     SPLUSscriptTag.innerHTML = SPLUSfetchText;
                     document.querySelector('head').appendChild(SPLUSscriptTag);
-                    console.log("SPLUSLoader: Injected file at " + SPLUSjsUrl);
+                    cLog("SPLUSLoader: Injected file at " + SPLUSjsUrl);
                     notifdiv.innerHTML = "SPLUSLoader: Injected " + SPLUSjsFile
                 } else {
-                    console.log("SPLUSLoader: Skipped file at " + SPLUSjsUrl + " because it is already loaded");
+                    cLog("SPLUSLoader: Skipped file at " + SPLUSjsUrl + " because it is already loaded");
                     notifdiv.innerHTML = "SPLUSLoader: Skipped " + SPLUSjsFile
                 }
             }
@@ -438,13 +443,13 @@
                 var SPLUScssUrl = SPLUSbase_url + SPLUScssFile
                 // inject
                 var SPLUSstyleTag = document.createElement('style');
-                console.debug("SPLUSLoader: Downloading file at " + SPLUScssUrl);
+                cDebug("SPLUSLoader: Downloading file at " + SPLUScssUrl);
                 notifdiv.innerHTML = "SPLUSLoader: DLing " + SPLUScssFile
                 var SPLUSfetchResponse = await fetch(SPLUScssUrl);
                 SPLUSfetchText = await SPLUSfetchResponse.text();
                 SPLUSstyleTag.innerHTML = SPLUSfetchText;
                 document.querySelector('head').appendChild(SPLUSstyleTag);
-                console.log("SPLUSLoader: Injected file at " + SPLUScssUrl);
+                cLog("SPLUSLoader: Injected file at " + SPLUScssUrl);
                 notifdiv.innerHTML = "SPLUSLoader: Injected " + SPLUScssFile
             }
         }
