@@ -427,7 +427,6 @@ let modals = [
         "theme-editor-modal",
         "Schoology Plus Theme Editor",
         createElement("div", ["splus-modal-contents"], {}, [
-            createButton("splus-theme-editor-modal-reload", "Reload the theme editor", reloadThemeEditor),
             createElement("iframe", [], { src: "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage", id: "splus-trick-user-theme-editor-iframe" })
         ]),
         modalFooterText
