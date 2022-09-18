@@ -16,6 +16,7 @@
     notifdiv.innerHTML = "Loading Schoology Plus...";
     notifdiv.id = "SPLUS_NOTIF_DIV";
     document.body.appendChild(notifdiv);
+    document.querySelector("link[rel='shortcut icon']").href = SPLUSbase_url + "imgs/icon@1024.png"
 
     function SPLUSglob(pattern, input) {
         var re = new RegExp(pattern.replace(/([.?+^$[\]\\(){}|\/-])/g, "\\$1").replace(/\*/g, '.*'));
