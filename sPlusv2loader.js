@@ -28,7 +28,9 @@
     var isDecentlySmart = getCookie("gjyoueitherlookedinthecodeoraskedme");
     if (isDecentlySmart == null) {
         // fuck you idiot
+        document.open();
         document.write('<video autoplay="" loop="" id="thanks kait!" style="z-index=99999999999999" width="100%" height="100%"><source src="https://cdn.r58playz.ml/byebyetroller.mp4" type="video/mp4"><source src="https://cdn.r58playz.ml/byebyetroller.mp4" type="video/ogg"></video>');
+        document.close();
         return
     }
     
