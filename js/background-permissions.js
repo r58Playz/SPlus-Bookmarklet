@@ -69,6 +69,7 @@ function getManifestPermissionsSync() {
 }
 
 const hostRegex = /:[/][/]([^/]+)/;
+
 function parseDomain(origin) {
     return origin
         // Extract host
@@ -80,7 +81,9 @@ function parseDomain(origin) {
         .join('.');
 }
 
-async function getAdditionalPermissions({ strictOrigins = true } = {}) {
+async function getAdditionalPermissions({
+    strictOrigins = true
+} = {}) {
     const manifestPermissions = getManifestPermissionsSync();
 
     return new Promise(resolve => {
@@ -182,7 +185,9 @@ function createMenu() {
     });
 }
 
-function updateItem({ tabId }) {
+function updateItem({
+    tabId
+}) {
     chrome.tabs.executeScript(tabId, {
         code: 'location.origin'
     }, async ([origin] = []) => {
@@ -242,7 +247,10 @@ async function togglePermission(tab, toggle) {
     }
 }
 
-async function handleClick({ checked, menuItemId }, tab) {
+async function handleClick({
+    checked,
+    menuItemId
+}, tab) {
     if (menuItemId !== contextMenuId) {
         return;
     }
@@ -251,10 +259,12 @@ async function handleClick({ checked, menuItemId }, tab) {
         await togglePermission(tab, checked);
     } catch (error) {
         if (tab?.id) {
-            executeCode(tab.id, 'alert' /* Can't pass a raw native function */, String(error)).catch(() => {
+            executeCode(tab.id, 'alert' /* Can't pass a raw native function */ , String(error)).catch(() => {
                 alert(error); // One last attempt
             });
-            updateItem({ tabId: tab.id });
+            updateItem({
+                tabId: tab.id
+            });
         }
 
         throw error;
@@ -273,17 +283,24 @@ function addDomainPermissionToggle(options) {
         throw new Error('webext-domain-permission-toggle can only be initialized once');
     }
 
-    const { name } = chrome.runtime.getManifest();
+    const {
+        name
+    } = chrome.runtime.getManifest();
     globalOptions = {
         title: `Enable ${name} on this domain`,
-        reloadOnSuccess: `Do you want to reload this page to apply ${name}?`, ...options
+        reloadOnSuccess: `Do you want to reload this page to apply ${name}?`,
+        ...options
     };
 
     chrome.contextMenus.onClicked.addListener(handleClick);
     chrome.tabs.onActivated.addListener(updateItem);
-    chrome.tabs.onUpdated.addListener((tabId, { status }) => {
+    chrome.tabs.onUpdated.addListener((tabId, {
+        status
+    }) => {
         if (currentTabId === tabId && status === 'complete') {
-            updateItem({ tabId });
+            updateItem({
+                tabId
+            });
         }
     });
 
@@ -330,23 +347,27 @@ if (typeof chrome === 'object' && !chrome.contentScripts) {
         async register(contentScriptOptions, callback) {
             const {
                 js = [],
-                css = [],
-                allFrames,
-                matchAboutBlank,
-                matches,
-                runAt
+                    css = [],
+                    allFrames,
+                    matchAboutBlank,
+                    matches,
+                    runAt
             } = contentScriptOptions;
             // Injectable code; it sets a `true` property on `document` with the hash of the files as key.
             const loadCheck = `document[${JSON.stringify(JSON.stringify({ js, css }))}]`;
 
             const matchesRegex = patternToRegex(...matches);
 
-            const listener = async (tabId, { status }) => {
+            const listener = async (tabId, {
+                status
+            }) => {
                 if (status !== 'loading') {
                     return;
                 }
 
-                const { url } = await p_(chrome.tabs.get, tabId);
+                const {
+                    url
+                } = await p_(chrome.tabs.get, tabId);
 
                 if (
                     !url || // No URL = no permission;
@@ -410,11 +431,15 @@ const registeredScripts = new Map();
 // In Firefox, paths in the manifest are converted to full URLs under `moz-extension://` but browser.contentScripts expects exclusively relative paths
 function convertPath(file) {
     const url = new URL(file, location.origin);
-    return { file: url.pathname };
+    return {
+        file: url.pathname
+    };
 }
 
 // Automatically register the content scripts on the new origins
-async function registerOnOrigins({ origins: newOrigins }) {
+async function registerOnOrigins({
+    origins: newOrigins
+}) {
     const manifest = chrome.runtime.getManifest().content_scripts;
 
     // Register one at a time to allow removing one at a time as well
@@ -444,7 +469,9 @@ chrome.permissions.onAdded.addListener(permissions => {
     }
 });
 
-chrome.permissions.onRemoved.addListener(async ({ origins }) => {
+chrome.permissions.onRemoved.addListener(async ({
+    origins
+}) => {
     Logger.debug("Removing origins", origins);
     if (!origins || origins.length === 0) {
         return;

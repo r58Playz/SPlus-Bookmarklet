@@ -167,6 +167,42 @@ video.easter-egg {
     max-height: 50vmin;
     overflow: auto;
 }
+
+.splus-modal-contents.ui-tabs {
+    border: none !important;
+    background: none !important;
+}
+
+.splus-modal-contents select {
+    font-size: 16px !important;
+}
+
+.splus-modal-contents .ui-tabs-nav {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--primary-color) !important;
+}
+
+.splus-modal-contents.ui-tabs .ui-tab {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+}
+
+.splus-modal-contents.ui-tabs .ui-tab .ui-tabs-anchor {
+    color: var(--contrast-text-color) !important;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.splus-modal-contents.ui-tabs .ui-tab.ui-tabs-active {
+    background-color: var(--background-color) !important;
+}
+
+.splus-underline-heading {
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
 .splus-theme-editor-please-unset-css{ all: unset; }
 
 
@@ -278,12 +314,22 @@ video.easter-egg {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0 10px;
+}
+
+.settings-actions-wrapper {
+    margin-top: 10px;
+    font-weight: normal;
+}
+
+.settings-actions-wrapper > a,
+.settings-actions-wrapper > span {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .restore-defaults {
     color: red !important;
-    margin-top: 10px;
-    font-weight: normal;
 }
 
 .margin-under {
@@ -317,6 +363,39 @@ input[type=text].setting-item {
     font-size: 80%;
 }
 
+.sortable-container {
+    display: flex;
+}
+
+.sortable-container .sidebar-sortable {
+    background-color: var(--primary-color) !important;
+    min-height: 200px;
+    padding: 5px;
+}
+
+.sortable-container .sortable-list {
+    margin: 10px;
+    width: 50%;
+}
+
+.sortable-container .sortable-list .sortable-item::before {
+    content: "⡇";
+    padding-right: 5px;
+}
+
+.sortable-container .sortable-list .sortable-item {
+    background-color: var(--background-color);
+    color: var(--contrast-text-color) !important;
+    font-size: 14px;
+    padding: 7px 5px 5px 5px;
+    margin: 5px;
+    cursor: grab;
+}
+
+.sortable-container .sortable-list .ui-sortable-helper {
+    cursor: grabbing;
+}
+
 .hierarchical-grading-report.show-title.interactive {
     padding: 10px 0 !important;
 }
@@ -338,6 +417,14 @@ input[type=text].setting-item {
 
 .gradebook-course-title .awarded-grade {
     padding-top: 5px !important;
+}
+
+.grade-active-color {
+    color: #3aa406;
+}
+
+.grade-none-color {
+    color: #767676;
 }
 
 .profile-picture img.imagecache-profile_sm {
@@ -411,6 +498,12 @@ section.sgy-card .sgy-card-lens img.injected-course-icon {
 
 h1.setting-title {
     display: inline;
+}
+
+#popups-overlay,
+.active-loader .loading-overlay {
+    /* Modern-Compatible, however will default back to normal if Modern is not enabled.*/
+    background-color: var(--primary, var(--primary-color));
 }
 
 .popups-body .no-answer-provided {
@@ -513,18 +606,6 @@ the selector matches inside notifications in the new notifs dropdown
 
 ._pendo-launcher-badge_ {
     visibility: var(--help-center-fab-visibility) !important;
-}
-
-.overdue-submissions-wrapper {
-    display: var(--overdue-assignments-display) !important;
-}
-
-.upcoming-events-wrapper {
-    display: var(--upcoming-assignments-display) !important;
-}
-
-.quick-access-wrapper {
-    display: var(--quick-access-display) !important;
 }
 
 .quick-link-wrapper {
@@ -753,6 +834,21 @@ a._3_bfp {
     display: none !important;
 }
 
+/* ---- Hotfix for missized timer icons ---- */
+.upcoming-list .upcoming-event {
+    align-items: flex-start !important;
+}
+
+.upcoming-list .upcoming-event * {
+    flex-basis: fit-content;
+}
+
+.upcoming-list .upcoming-event > .infotip.submission-infotip {
+    margin-top: 2rem !important;
+    display: var(--to-do-list-icons-display, "block");
+}
+/* ---------------------------------------- */
+
 .splus-mark-completed-check .infotip {
     width: 90% !important;
 }
@@ -916,7 +1012,7 @@ a._3_bfp {
 
 #center-inner.splus-api-key-page #center-top .page-title,
 #center-inner.splus-api-key-page #content-wrapper form p.description,
-#center-inner.splus-api-key-page .submit-span-wrapper {
+#center-inner.splus-api-key-page .submit-span-wrapper:not(.splus-modal-button) {
     display: none;
 }
 
@@ -974,6 +1070,13 @@ a._3_bfp {
     width: 400px;
 }
 
+.splus-permissions-link {
+    text-align: center;
+    font-size: 14px;
+    color: white !important;
+    text-decoration: underline;
+}
+
 .splus-permissions-description strong {
     font-size: 16px;
     text-decoration: underline;
@@ -997,4 +1100,12 @@ a._3_bfp {
     padding: 0 10%;
     list-style: disc !important;
     list-style-position: inside !important;
+}
+
+.splus-permissions-close {
+    position: absolute;
+    left: 69%;
+    top: 5%;
+    font-size: xx-large;
+    cursor: pointer;
 }

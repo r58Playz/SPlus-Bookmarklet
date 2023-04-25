@@ -1,9 +1,8 @@
 // IMPORTANT!!!! SET THIS TO WHERE YOU ARE HOSTING THIS!!!!!
-let SPlusStubs_hosting_url = 'https://splus.r58playz.ml/' /*'http://localhost:8080/'*/ /*'https://8080-r58playz-splusbookmarkl-0tqywk20cc2.ws-us63.gitpod.io/'*/;
+let SPlusStubs_hosting_url = /*'https://splus.r58playz.ml/'*/ 'http://localhost:8000/';
 
 // non-extension impl of chrome.storage and chrome.runtime
-const c_storage = {
-}
+const c_storage = {}
 
 let SPLUS_EXT_API_localStorage = window.localStorage;
 const c_s_sync = {
@@ -13,21 +12,21 @@ const c_s_sync = {
             keys = Object.keys(SPLUS_EXT_API_localStorage),
             i = keys.length;
 
-        while ( i-- ) {
-            let item = SPLUS_EXT_API_localStorage.getItem( keys[i] )
+        while (i--) {
+            let item = SPLUS_EXT_API_localStorage.getItem(keys[i])
             var parsedItem;
             try {
                 parsedItem = JSON.parse(item);
             } catch (error) {
                 parsedItem = item;
             }
-            archive[ keys[i] ] = parsedItem;
+            archive[keys[i]] = parsedItem;
         }
-        if (toGet){
+        if (toGet) {
             if (toGet.constructor == Object) {
                 for (const [key, value] of Object.entries(toGet)) {
                     if (!(key in archive)) {
-                        console.debug("ExtAPIStubs: chrome.storage.sync.get: Set provided default value for "+key+"to value: "+value);
+                        console.debug("ExtAPIStubs: chrome.storage.sync.get: Set provided default value for " + key + "to value: " + value);
                         archive[key] = value;
                     }
                 }
@@ -38,7 +37,7 @@ const c_s_sync = {
     set(toSet, callback) {
         console.debug("ExtAPIStubs: Redirected chrome.storage.sync.set");
         for (const [key, value] of Object.entries(toSet)) {
-          console.debug("ExtAPIStubs: setting key " + key + "to value: "+value);
+            console.debug("ExtAPIStubs: setting key " + key + "to value: " + value);
             SPLUS_EXT_API_localStorage.setItem(key, JSON.stringify(value));
         }
     },
@@ -55,8 +54,12 @@ const c_s_sync = {
 }
 // SET YOUR MANIFEST DATA HERE!
 function c_r_getManifest() {
-    return {'version_name': '4.0 (Bookmarklet) [S+ version 7.4.2]', 'version': '7.4.2'}
+    return {
+        'version_name': '5.0 (Bookmarklet) [S+ version 7.8.1]',
+        'version': '7.8.1'
+    }
 }
+
 function c_r_getURL(ext_url) {
     console.debug("ExtAPIStubs: Redirected chrome.runtime.getURL");
     return SPlusStubs_hosting_url + ext_url
@@ -71,9 +74,9 @@ chrome.runtime.getURL = c_r_getURL;
 
 function SPLUS_EXT_API_CALLBACK(request, sender, sendResponse) {
     if (request.type == "fetch" && request.url !== undefined) {
-        Logger.debug("Received fetch request for " + request.url);
+        window.splus.Logger.debug("Received fetch request for " + request.url);
 
-        (async function () {
+        (async function() {
             let finalResponse = {};
             let responseObj;
             try {
@@ -109,7 +112,10 @@ function SPLUS_EXT_API_CALLBACK(request, sender, sendResponse) {
             }
 
             return finalResponse;
-        })().then(x => sendResponse(JSON.stringify(x))).catch(err => sendResponse(JSON.stringify({ success: false, error: err })));
+        })().then(x => sendResponse(JSON.stringify(x))).catch(err => sendResponse(JSON.stringify({
+            success: false,
+            error: err
+        })));
 
         return true;
     }
@@ -130,6 +136,11 @@ chrome.runtime.sendMessage = c_r_sendMessage;
  * @param {string} [label] (Event Label) Used to group related events
  * @param {number} [value] Numeric value associated with the event
  */
-var trackEvent = function (target, action, label = undefined, value = undefined) {
-    console.debug("[S+] Tracking disabled by user", { target, action, label, value });
+var trackEvent = function(target, action, label = undefined, value = undefined) {
+    console.debug("[S+] Tracking disabled by user", {
+        target,
+        action,
+        label,
+        value
+    });
 };

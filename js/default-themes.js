@@ -1,13 +1,14 @@
-(async function () {
+(async function() {
     // Wait for loader.js to finish running
     while (!window.splusLoaded) {
         await new Promise(resolve => setTimeout(resolve, 10));
     }
     await loadDependencies("default-themes", []);
-})();
 
-let __defaultThemes = [
-    {
+    window.splus.LAUSD_THEMES = ["LAUSD Orange", "LAUSD Dark Blue", "LAUSD 2019"];
+    window.splus.CLASSIC_THEMES = ["Schoology Plus", "Rainbow"]
+
+    window.splus.__defaultThemes = [{
         "name": "Schoology Plus Modern Light",
         "version": 2,
         "color": {
@@ -45,7 +46,17 @@ let __defaultThemes = [
                     "#fce8d1",
                     "#e1f1e7",
                     "#f0dfed",
-                    "#e9e9ea"
+                    "#e9e9ea",
+                    "#00427c",
+                    "#603073",
+                    "#8b1941",
+                    "#970c0c",
+                    "#9c3b07",
+                    "#685203",
+                    "#2a5f16",
+                    "#09584f",
+                    "#005a75",
+                    "#4d5557",
                 ],
                 "text": {
                     "primary": "#2A2A2A",
@@ -62,8 +73,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_plus"
         }
-    },
-    {
+    }, {
         "name": "Schoology Plus Modern Dark",
         "version": 2,
         "color": {
@@ -107,7 +117,17 @@ let __defaultThemes = [
                     "#164152",
                     "#00543f",
                     "#633e11",
-                    "#461b2d"
+                    "#461b2d",
+                    "#00427c",
+                    "#603073",
+                    "#8b1941",
+                    "#970c0c",
+                    "#9c3b07",
+                    "#685203",
+                    "#2a5f16",
+                    "#09584f",
+                    "#005a75",
+                    "#4d5557",
                 ],
                 "text": {
                     "primary": "#DCDDDE",
@@ -124,8 +144,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_plus"
         }
-    },
-    {
+    }, {
         "name": "Rainbow Modern",
         "version": 2,
         "color": {
@@ -179,7 +198,17 @@ let __defaultThemes = [
                     "#fce8d1",
                     "#e1f1e7",
                     "#f0dfed",
-                    "#e9e9ea"
+                    "#e9e9ea",
+                    "#00427c",
+                    "#603073",
+                    "#8b1941",
+                    "#970c0c",
+                    "#9c3b07",
+                    "#685203",
+                    "#2a5f16",
+                    "#09584f",
+                    "#005a75",
+                    "#4d5557",
                 ],
                 "text": {
                     "primary": "#2A2A2A",
@@ -196,8 +225,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_plus"
         }
-    },
-    {
+    }, {
         "name": "Schoology Plus",
         "version": 2,
         "color": {
@@ -206,8 +234,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_plus"
         }
-    },
-    {
+    }, {
         "name": "Rainbow",
         "version": 2,
         "color": {
@@ -232,8 +259,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_plus"
         }
-    },
-    {
+    }, {
         "name": "Toy",
         "version": 2,
         "color": {
@@ -245,9 +271,22 @@ let __defaultThemes = [
         "cursor": {
             "primary": chrome.runtime.getURL("/imgs/toy-mode.png")
         }
-    },
-    {
+    }, {
         "name": "LAUSD Dark Blue",
+        "version": 2,
+        "color": {
+            "custom": {
+                "primary": "#143f69",
+                "hover": "#345f89",
+                "background": "#345f89",
+                "border": "#024f7d"
+            }
+        },
+        "logo": {
+            "preset": "lausd_2022"
+        }
+    }, {
+        "name": "LAUSD 2019",
         "version": 2,
         "color": {
             "custom": {
@@ -260,8 +299,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "lausd_2019"
         }
-    },
-    {
+    }, {
         "name": "LAUSD Orange",
         "version": 2,
         "color": {
@@ -275,8 +313,7 @@ let __defaultThemes = [
         "logo": {
             "preset": "lausd_legacy"
         }
-    },
-    {
+    }, {
         "name": "Schoology Default",
         "version": 2,
         "color": {
@@ -290,5 +327,8 @@ let __defaultThemes = [
         "logo": {
             "preset": "schoology_logo"
         }
-    }
-];
+    }];
+
+    window.splus.Logger.debug("Finished loading default-themes.js");
+    window.splusLoaded.add("default-themes");
+})();

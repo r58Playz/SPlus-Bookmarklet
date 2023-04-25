@@ -1,13 +1,10 @@
-(async function () {
+(async function() {
     // Wait for loader.js to finish running
     while (!window.splusLoaded) {
         await new Promise(resolve => setTimeout(resolve, 10));
     }
     await loadDependencies("all-idle", ["all"]);
-})();
-
-// hack for course aliases
-(async function () {
+    // hack for course aliases
     let applyCourseAliases = null;
     let applyThemeIcons = null;
 
@@ -18,10 +15,10 @@
     let hasAppliedDashboard = false;
 
     // duplicate of logic in themes.js; needed because we do mutation logic here
-    let skipOverriddenIcons = Setting.getValue("courseIcons") === "defaultOnly";
+    let skipOverriddenIcons = window.splus.Setting.getValue("courseIcons") === "defaultOnly";
 
-    if (Setting.getValue("courseIcons") != "disabled") {
-        applyThemeIcons = function () {
+    if (window.splus.Setting.getValue("courseIcons") != "disabled") {
+        applyThemeIcons = function() {
             let ancillaryList = null;
             if (courseDashboard && !hasAppliedDashboard) {
                 let cardLenses = mainInner.querySelectorAll(".course-dashboard .sgy-card-lens");
@@ -31,7 +28,7 @@
                     for (let tile of cardLenses) {
                         // check if not default icon
                         // underlying method does this, but since we mutate we have to do it too
-                        if (skipOverriddenIcons && !((tile.firstChild.data || tile.firstChild.src || "").match(defaultCourseIconUrlRegex))) {
+                        if (skipOverriddenIcons && !((tile.firstChild.data || tile.firstChild.src || "").match(window.splus.defaultCourseIconUrlRegex))) {
                             continue;
                         }
 
@@ -55,25 +52,25 @@
                     hasAppliedDashboard = true;
                 }
             }
-            Theme.setProfilePictures(ancillaryList);
+            window.splus.Theme.setProfilePictures(ancillaryList);
         };
         applyThemeIcons();
     }
 
     // PREP COURSE ALIASES
-    if (Setting.getValue("courseAliases")) {
-        let myClasses = (await fetchApiJson(`/users/${getUserId()}/sections`)).section;
+    if (window.splus.Setting.getValue("courseAliases")) {
+        let myClasses = (await window.splus.fetchApiJson(`/users/${window.splus.getUserId()}/sections`)).section;
 
         // get course info for courses with aliases that I'm not currently enrolled in, concurrently
-        myClasses.push(...await Promise.all(Object.keys(Setting.getValue("courseAliases")).filter(aliasedCourseId => !myClasses.some(x => x.id == aliasedCourseId))
-            .filter(aliasedCourseId => Setting.getValue("courseAliases")[aliasedCourseId]) // only fetch if the alias hasn't subsequently been cleared
+        myClasses.push(...await Promise.all(Object.keys(window.splus.Setting.getValue("courseAliases")).filter(aliasedCourseId => !myClasses.some(x => x.id == aliasedCourseId))
+            .filter(aliasedCourseId => window.splus.Setting.getValue("courseAliases")[aliasedCourseId]) // only fetch if the alias hasn't subsequently been cleared
             .map(id => fetchApi(`/sections/${id}`).then(resp => resp.json().catch(rej => null), rej => null))));
 
-        Logger.log("Classes loaded, building alias stylesheet");
+        window.splus.Logger.log("Classes loaded, building alias stylesheet");
         // https://stackoverflow.com/a/707794 for stylesheet insertion
         let sheet = window.document.styleSheets[0];
 
-        for (let aliasedCourseId in Setting.getValue("courseAliases")) {
+        for (let aliasedCourseId in window.splus.Setting.getValue("courseAliases")) {
             // https://stackoverflow.com/a/18027136 for text replacement
             sheet.insertRule(`.course-name-wrapper-${aliasedCourseId} {
             visibility: hidden;
@@ -81,15 +78,15 @@
             letter-spacing: -999px;
         }`, sheet.cssRules.length);
             sheet.insertRule(`.course-name-wrapper-${aliasedCourseId}:after {
-            content: "${Setting.getValue("courseAliases")[aliasedCourseId]}";
+            content: "${window.splus.Setting.getValue("courseAliases")[aliasedCourseId]}";
             visibility: visible;
             word-spacing:normal;
-            letter-spacing:normal; 
+            letter-spacing:normal;
         }`, sheet.cssRules.length);
         }
 
-        Logger.log("Applying aliases");
-        applyCourseAliases = function (mutationsList) {
+        window.splus.Logger.log("Applying aliases");
+        applyCourseAliases = function(mutationsList) {
             let rootElement = document.body;
 
             if (mutationsList && mutationsList.length == 0) {
@@ -101,7 +98,7 @@
             }
 
             for (let jsonCourse of myClasses) {
-                if (!jsonCourse || !Setting.getValue("courseAliases")[jsonCourse.id]) {
+                if (!jsonCourse || !window.splus.Setting.getValue("courseAliases")[jsonCourse.id]) {
                     continue;
                 }
 
@@ -117,7 +114,7 @@
                         filterElements: (elem) => !elem.classList || !elem.classList.contains("splus-coursealiasing-exempt")
                     });
 
-                    document.title = document.title.replace(findText, Setting.getValue("courseAliases")[jsonCourse.id]);
+                    document.title = document.title.replace(findText, window.splus.Setting.getValue("courseAliases")[jsonCourse.id]);
                 }
 
                 // cleanup: if we run this replacement twice, we'll end up with unnecessary nested elements <special-span><special-span>FULL COURSE NAME</special-span></special-span>
@@ -140,14 +137,14 @@
     let isModifying = false;
 
     // beware of performance implications of observing document.body
-    let aliasPrepObserver = new MutationObserver(function (mutationsList) {
+    let aliasPrepObserver = new MutationObserver(function(mutationsList) {
         if (isModifying) {
             return;
         }
 
         isModifying = true;
 
-        let filteredList = mutationsList.filter(function (mutation) {
+        let filteredList = mutationsList.filter(function(mutation) {
             for (let cssClass of mutation.target.classList) {
                 // target blacklist
                 // we don't care about some (especially frequent and performance-hurting) changes
@@ -165,7 +162,7 @@
         });
 
         // this delegate has the conditional within it
-        // TEMPORARY CHANGE: Disable searching for nicknames on DOM updates 
+        // TEMPORARY CHANGE: Disable searching for nicknames on DOM updates
         // if (applyCourseAliases) {
         //     applyCourseAliases(filteredList);
         // }
@@ -177,19 +174,19 @@
         isModifying = false;
     });
     // necessary (again) because on *some* pages, namely course-dashboard, we have a race condition
-    // if the main body loads after our initial check but before the observe call (e.g. during our network awaits), 
+    // if the main body loads after our initial check but before the observe call (e.g. during our network awaits),
     // we won't catch the update until a separate unrelated DOM change
     // this is not as much of an issue with aliases because we do our initial check there after the network awaits,
     // which are by far the longest-running part of this code
     if (applyThemeIcons) {
         applyThemeIcons();
     }
-    aliasPrepObserver.observe(document.body, { childList: true, subtree: true });
+    aliasPrepObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 
-})();
-
-// show grades on notifications dropdown
-(function () {
+    // show grades on notifications dropdown
     function appendGradeToLink(gradeLink, assignmentId, gradeContainer, isDynamic) {
         if (!gradeLink.parentElement.querySelector(`.grade-data${isDynamic ? ".splus-addedtodynamicdropdown" : ""}[data-assignment-id=\"${assignmentId}\"]`)) {
             // to control for already processed - race condition from the above
@@ -210,13 +207,19 @@
                     effectiveTitle = "Missing";
                 }
             }
-            gradeLink.insertAdjacentElement("afterend", createElement("span", isDynamic ? ["grade-data", "splus-addedtodynamicdropdown"] : ["grade-data"], { textContent: ` (${effectiveGrade} / ${gradeContainer[assignmentId].max_points || 0})`, dataset: { assignmentId: assignmentId }, title: effectiveTitle }));
+            gradeLink.insertAdjacentElement("afterend", createElement("span", isDynamic ? ["grade-data", "splus-addedtodynamicdropdown"] : ["grade-data"], {
+                textContent: ` (${effectiveGrade} / ${gradeContainer[assignmentId].max_points || 0})`,
+                dataset: {
+                    assignmentId: assignmentId
+                },
+                title: effectiveTitle
+            }));
         }
     }
 
     let notifsMenuContainer = document.querySelector("#header nav button[aria-label$=\"notifications\"], #header nav button[aria-label$=\"notification\"]").parentElement;
-    let gradesLoadedPromise = (async function () {
-        let myGrades = await fetchApiJson(`/users/${getUserId()}/grades`);
+    let gradesLoadedPromise = (async function() {
+        let myGrades = await window.splus.fetchApiJson(`/users/${window.splus.getUserId()}/grades`);
 
         let loadedGradeContainer = {};
 
@@ -233,16 +236,19 @@
         return loadedGradeContainer;
     })();
 
-    let notifsDropdownObserver = new MutationObserver(function (mutationList) {
+    let notifsDropdownObserver = new MutationObserver(function(mutationList) {
         if (!shouldProcessMutations(mutationList)) {
             return;
         }
 
-        chrome.runtime.sendMessage({ type: "setBadgeText", text: "" });
+        chrome.runtime.sendMessage({
+            type: "setBadgeText",
+            text: ""
+        });
 
         let coll = notifsMenuContainer.querySelectorAll("div[role=\"menu\"] ._2awxe._3skcp._1tpub a[href^=\"/assignment/\"]");
         if (coll.length > 0) {
-            Logger.log("NotifsDropdown observation has links to process - processing now");
+            window.splus.Logger.log("NotifsDropdown observation has links to process - processing now");
         }
 
         // obfuscated classnames identify the div containers of our individual notifications (explicitly excluding the "View All" button)
@@ -279,12 +285,15 @@
 
     });
 
-    notifsDropdownObserver.observe(notifsMenuContainer, { childList: true, subtree: true });
+    notifsDropdownObserver.observe(notifsMenuContainer, {
+        childList: true,
+        subtree: true
+    });
 
     if (window.location.pathname == "/home/notifications") {
         // notifications page: legacy style
 
-        let processItemList = function (itemList) {
+        let processItemList = function(itemList) {
             for (let gradeLink of itemList.querySelectorAll(".s-edge-type-grade-add a[href^=\"/assignment/\"]")) {
                 if (gradeLink.offsetParent == null) {
                     // hidden and therefore irrelevant
@@ -305,13 +314,15 @@
 
         let itemList = document.querySelector("#main-inner .item-list ul.s-notifications-mini");
 
-        let oldNotifsObserver = new MutationObserver(function () {
+        let oldNotifsObserver = new MutationObserver(function() {
             processItemList(itemList);
         });
 
         processItemList(itemList);
 
-        oldNotifsObserver.observe(itemList, { childList: true });
+        oldNotifsObserver.observe(itemList, {
+            childList: true
+        });
     }
 
     let moreGradesModalObserver = new MutationObserver(mutationsList => {
@@ -334,7 +345,9 @@
                     let assignmentId = assignmentWrapper.getElementsByTagName("a")[1].href.match(/\d+/)[0];
 
                     gradesLoadedPromise.then(gradeContainer => {
-                        assignmentWrapper.querySelector(".grade-added").insertAdjacentElement("beforebegin", createElement("span", ["grade-data"], { textContent: ` (${gradeContainer[assignmentId].grade} / ${gradeContainer[assignmentId].max_points || 0})` }))
+                        assignmentWrapper.querySelector(".grade-added").insertAdjacentElement("beforebegin", createElement("span", ["grade-data"], {
+                            textContent: ` (${gradeContainer[assignmentId].grade} / ${gradeContainer[assignmentId].max_points || 0})`
+                        }))
                     });
                 }
                 return;
@@ -342,21 +355,26 @@
         }
     });
 
-    moreGradesModalObserver.observe(document.body, { childList: true });
-})();
+    moreGradesModalObserver.observe(document.body, {
+        childList: true
+    });
 
-// Prevent scrolling when a modal is open
-(function () {
+    // Prevent scrolling when a modal is open
     new MutationObserver((mutations, observer) => {
         if (document.getElementById("body").getAttribute("aria-hidden") == "true") {
             document.documentElement.style.overflow = "hidden";
         } else {
             document.documentElement.style.overflow = "";
         }
-    }).observe(document.getElementById("body"), { attributes: true, attributeFilter: ["aria-hidden"] });
-})();
+    }).observe(document.getElementById("body"), {
+        attributes: true,
+        attributeFilter: ["aria-hidden"]
+    });
 
-(function () {
+    if (location.pathname.startsWith("/link") && window.splus.Setting.getValue("autoBypassLinkRedirects") === "enabled") {
+        document.querySelector("a.s-extlink-direct[href]").click();
+    }
+
     setTimeout(() => {
         let assessmentStartContainer = document.querySelector(`.assessment-delivery-landing-app div._3dHTa`);
 
@@ -364,20 +382,29 @@
             assessmentStartContainer.appendChild(
                 createElement(
                     "div",
-                    [],
-                    {
+                    [], {
                         id: "assessment-darktheme-warning-message",
                         textContent: "WARNING: A dark theme is enabled and might prevent you from reading certain questions. If you can't read a question, you can temporarily disable dark theme using the Toggle Theme button on the navigation bar.",
-                        dataset: { popup: Setting.getNestedValue("popup", "assessmentDarkThemeWarning", true) },
-                        style: { display: "none" }
+                        dataset: {
+                            popup: window.splus.Setting.getNestedValue("popup", "assessmentDarkThemeWarning", true)
+                        },
+                        style: {
+                            display: "none"
+                        }
                     },
                     [
                         createElement("p", ["click-to-hide"], {}, [
-                            createElement("span", [], { textContent: "Hide this once", onclick: () => document.getElementById("assessment-darktheme-warning-message").remove() }),
-                            createElement("b", [], { textContent: " • " }),
                             createElement("span", [], {
-                                textContent: "Never show again", onclick: () => {
-                                    Setting.setNestedValue("popup", "assessmentDarkThemeWarning", false);
+                                textContent: "Hide this once",
+                                onclick: () => document.getElementById("assessment-darktheme-warning-message").remove()
+                            }),
+                            createElement("b", [], {
+                                textContent: " • "
+                            }),
+                            createElement("span", [], {
+                                textContent: "Never show again",
+                                onclick: () => {
+                                    window.splus.Setting.setNestedValue("popup", "assessmentDarkThemeWarning", false);
                                     document.getElementById("assessment-darktheme-warning-message").dataset.popup = "false";
                                 }
                             }),
@@ -387,30 +414,33 @@
             )
         }
     }, 1000);
-})();
 
-function parseSettingsHash() {
-    let hashes = location.hash.split('#');
-    if (hashes.length > 1 && hashes[1] === "splus-settings") {
-        openModal("settings-modal");
-        if (hashes.length > 2) {
-            setTimeout(() => {
-                location.hash = hashes[2];
-                document.getElementById(hashes[2]).parentElement.parentElement.classList.add("setting-highlight");
+    function parseSettingsHash() {
+        let hashes = location.hash.split('#');
+        if (hashes.length > 1 && hashes[1] === "splus-settings") {
+            openModal("settings-modal");
+            if (hashes.length > 2) {
+                setTimeout(() => {
+                    location.hash = hashes[2];
+                    let settingEntry = document.getElementById(hashes[2]).parentElement.parentElement;
+                    let settingTab = settingEntry.parentElement;
+                    let tabIndex = Array.from(settingTab.parentElement.children).indexOf(settingTab) - 1;
+                    $(".splus-settings-tabs").tabs("option", "active", tabIndex);
+                    settingEntry.classList.add("setting-highlight");
+                    location.hash = "";
+                }, 500);
+            } else {
                 location.hash = "";
-            }, 500);
-        }
-        else {
-            location.hash = "";
+            }
         }
     }
-}
 
-parseSettingsHash();
-
-// Handle opening Schoology Plus Settings
-window.addEventListener("hashchange", event => {
     parseSettingsHash();
-});
 
-Logger.debug("Finished loading all-idle.js");
+    // Handle opening Schoology Plus Settings
+    window.addEventListener("hashchange", event => {
+        parseSettingsHash();
+    });
+
+    window.splus.Logger.debug("Finished loading all-idle.js");
+})();

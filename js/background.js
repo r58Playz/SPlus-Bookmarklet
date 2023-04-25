@@ -38,52 +38,109 @@ var assignmentNotificationUrl = "https://app.schoology.com/home/notifications?fi
 var defaultDomain = "app.schoology.com";
 var storage = {};
 
-chrome.storage.sync.get({ defaultDomain: "app.schoology.com" }, s => {
+chrome.storage.sync.get({
+    defaultDomain: "app.schoology.com"
+}, s => {
     defaultDomain = s.defaultDomain;
     assignmentNotificationUrl = `https://${defaultDomain}/home/notifications?filter=all`;
 });
 
-chrome.runtime.onInstalled.addListener(function (details) {
+chrome.runtime.onInstalled.addListener(function(details) {
     // TODO: Open window here to ask new users to select their domain
     // chrome.tabs.create({ url: "https://schoologypl.us" })
-    trackEvent("Runtime onInstalled", details.reason, "Versions");
+    trackEvent("perform_action", {
+        id: "runtime_oninstalled",
+        value: details.reason,
+        context: "Versions",
+        legacyTarget: "Runtime onInstalled",
+        legacyAction: details.reason,
+        legacyLabel: "Versions"
+    });
+
+    chrome.contextMenus.create({
+        "title": "Theme Editor",
+        "contexts": ["browser_action"],
+        "onclick": () => window.open(chrome.runtime.getURL("/theme-editor.html"), "_blank")
+    });
+
+    chrome.contextMenus.create({
+        "title": "Discord Support Server",
+        "contexts": ["browser_action"],
+        "onclick": () => window.open("https://discord.schoologypl.us", "_blank")
+    });
+
+    chrome.contextMenus.create({
+        "title": "Schoology Plus Website",
+        "contexts": ["browser_action"],
+        "onclick": () => window.open("https://schoologypl.us?utm_source=ext-context-menu", "_blank")
+    });
 });
 
 Logger.log("Loaded event page");
 Logger.log("Adding alarm listener");
 chrome.alarms.onAlarm.addListener(onAlarm);
 Logger.log("Adding notification listener");
-chrome.notifications.onClicked.addListener(function (id) {
+chrome.notifications.onClicked.addListener(function(id) {
     Logger.log("Notification clicked");
-    trackEvent(id, "notification click", "Notifications");
+    trackEvent("perform_action", {
+        id: "click",
+        context: "Notifications",
+        value: id,
+        legacyTarget: id,
+        legacyAction: "notification click",
+        legacyLabel: "Notifications"
+    });
     chrome.notifications.clear(id, null);
     switch (id) {
         case "assignment":
-            chrome.tabs.create({ url: `https://${defaultDomain}/home/notifications` }, null);
-            chrome.browserAction.setBadgeText({ text: "" });
+            chrome.tabs.create({
+                url: `https://${defaultDomain}/home/notifications`
+            }, null);
+            chrome.browserAction.setBadgeText({
+                text: ""
+            });
             break;
         default:
-            chrome.tabs.create({ url: `https://${defaultDomain}` });
+            chrome.tabs.create({
+                url: `https://${defaultDomain}`
+            });
             break;
     }
 });
-chrome.browserAction.setBadgeBackgroundColor({ color: [217, 0, 0, 255] });
+chrome.browserAction.setBadgeBackgroundColor({
+    color: [217, 0, 0, 255]
+});
 Logger.log("Adding browser action listener");
-chrome.browserAction.onClicked.addListener(function () {
+chrome.browserAction.onClicked.addListener(function() {
     Logger.log("Browser action clicked");
     chrome.browserAction.getBadgeText({}, x => {
         let n = Number.parseInt(x);
-        trackEvent("Browser Action", n ? `browser action clicked: ${n}` : "browser action clicked: 0", "Notifications");
+        trackEvent("button_click", {
+            id: "main-browser-action-button",
+            context: "Browser Action",
+            value: String(n || 0),
+            legacyTarget: "Browser Action",
+            legacyAction: n ? `browser action clicked: ${n}` : "browser action clicked: 0",
+            legacyLabel: "Notifications"
+        });
         Logger.log(`Browser action text: "${x}"`);
-        if (n) chrome.tabs.create({ url: `https://${defaultDomain}/home/notifications` }, null);
-        else chrome.tabs.create({ url: `https://${defaultDomain}` }, null);
-        chrome.browserAction.setBadgeText({ text: "" });
+        if (n) chrome.tabs.create({
+            url: `https://${defaultDomain}/home/notifications`
+        }, null);
+        else chrome.tabs.create({
+            url: `https://${defaultDomain}`
+        }, null);
+        chrome.browserAction.setBadgeText({
+            text: ""
+        });
     });
 });
 Logger.log("Adding cookie change listener");
-chrome.cookies.onChanged.addListener(function (changeInfo) {
+chrome.cookies.onChanged.addListener(function(changeInfo) {
     if (changeInfo.cookie.domain == `.${defaultDomain}` && changeInfo.cookie.name.startsWith("SESS")) {
-        chrome.storage.sync.get({ sessionCookiePersist: "disabled" }, settings => {
+        chrome.storage.sync.get({
+            sessionCookiePersist: "disabled"
+        }, settings => {
             let rewriteCookie = false;
             if (settings.sessionCookiePersist == "enabled") {
                 if (changeInfo.removed && (changeInfo.cause == "evicted" || changeInfo.cause == "expired")) {
@@ -121,11 +178,11 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
 
 Logger.log("Adding HTTP request command listener");
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
         if (request.type == "fetch" && request.url !== undefined) {
             Logger.debug("Received fetch request for " + request.url);
 
-            (async function () {
+            (async function() {
                 let finalResponse = {};
                 let responseObj;
                 try {
@@ -161,19 +218,24 @@ chrome.runtime.onMessage.addListener(
                 }
 
                 return finalResponse;
-            })().then(x => sendResponse(JSON.stringify(x))).catch(err => sendResponse(JSON.stringify({ success: false, error: err })));
+            })().then(x => sendResponse(JSON.stringify(x))).catch(err => sendResponse(JSON.stringify({
+                success: false,
+                error: err
+            })));
 
             return true;
         } else if (request.type == "updateDefaultDomain" && request.domain !== undefined) {
             defaultDomain = request.domain;
             assignmentNotificationUrl = `https://${defaultDomain}/home/notifications?filter=all`;
         } else if (request.type == "setBadgeText" && request.text !== undefined) {
-            chrome.browserAction.setBadgeText({ text: request.text });
+            chrome.browserAction.setBadgeText({
+                text: request.text
+            });
         }
     }
 );
 
-chrome.alarms.get("notification", function (alarm) {
+chrome.alarms.get("notification", function(alarm) {
     if (alarm) {
         Logger.log("Alarm is already registered");
     } else {
@@ -185,7 +247,9 @@ chrome.alarms.get("notification", function (alarm) {
 });
 
 //Run once on load
-onAlarm({ name: "notification" });
+onAlarm({
+    name: "notification"
+});
 
 /**
  * Sends a desktop notification if settings permit
@@ -194,7 +258,7 @@ onAlarm({ name: "notification" });
  * @param {number} [count=1] The number to add to the browser action badge
  */
 function sendNotification(notification, name, count) {
-    chrome.storage.sync.get(null, function (storageContent) {
+    chrome.storage.sync.get(null, function(storageContent) {
         count = (count || count == 0) ? count : 1;
         if (getBrowser() == "Firefox") {
             delete notification.requireInteraction;
@@ -204,14 +268,23 @@ function sendNotification(notification, name, count) {
         if (count > 0 && (!storageContent.notifications || storageContent.notifications == "enabled" || storageContent.notifications == "badge")) {
             chrome.browserAction.getBadgeText({}, x => {
                 let num = Number.parseInt(x);
-                chrome.browserAction.setBadgeText({ text: (num ? num + count : count).toString() });
+                chrome.browserAction.setBadgeText({
+                    text: (num ? num + count : count).toString()
+                });
             });
         } else {
             Logger.log("Number badge is disabled");
         }
         if (!storageContent.notifications || storageContent.notifications == "enabled" || storageContent.notifications == "popup") {
             chrome.notifications.create(name, notification, null);
-            trackEvent(name, "shown", "Notifications");
+            trackEvent("perform_action", {
+                id: "shown",
+                context: "Notifications",
+                value: name,
+                legacyTarget: name,
+                legacyAction: "shown",
+                legacyLabel: "Notifications"
+            });
         } else {
             Logger.log("Popup notifications are disabled");
         }
@@ -219,7 +292,7 @@ function sendNotification(notification, name, count) {
 }
 
 function onAlarm(alarm) {
-    chrome.storage.sync.get(null, function (storageContent) {
+    chrome.storage.sync.get(null, function(storageContent) {
         storage = storageContent;
         if (alarm && alarm.name === "notification") {
             try {
@@ -238,12 +311,12 @@ function onAlarm(alarm) {
 function loadAssignmentNotifications(storageContent) {
     fetch(assignmentNotificationUrl, {
         credentials: "same-origin"
-    }).then(function (response) {
+    }).then(function(response) {
         if (response.ok) {
             return response.json();
         }
         throw new Error("Error loading notifications: " + response);
-    }).then(function (response) {
+    }).then(function(response) {
         Logger.log("Last new grade: " + new Date(storageContent.lastTime).toString());
         let time = storageContent.lastTime;
         let timeModified = false;
@@ -297,7 +370,11 @@ function loadAssignmentNotifications(storageContent) {
         }
 
         if (timeModified) {
-            chrome.storage.sync.set({ lastTime: time }, () => { Logger.log("Set new time " + new Date(time)) });
+            chrome.storage.sync.set({
+                lastTime: time
+            }, () => {
+                Logger.log("Set new time " + new Date(time))
+            });
         } else {
             Logger.log("No new notifications");
         }

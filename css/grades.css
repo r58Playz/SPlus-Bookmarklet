@@ -4,14 +4,6 @@
     font-size: 14px;
 }
 
-.grade-active-color {
-    color: #3aa406;
-}
-
-.grade-none-color {
-    color: #767676;
-}
-
 tr.item-row td.grade-column div.td-content-wrapper {
     padding: 7px 10px 5px !important;
     text-align: center;
@@ -108,11 +100,13 @@ col.comments-column {
 
 .category-row img.modified-score-percent-warning {
     width: 12px;
+    height: 12px;
 }
 
 .period-row img.modified-score-percent-warning {
     margin-bottom: 1px;
     width: 15px;
+    height: 15px;
 }
 
 .relative-span-contain {

@@ -8,7 +8,13 @@ let toggle = document.getElementById("toggle");
 toggle.addEventListener("click", e => toggleCondensed());
 let toggleIcon = document.getElementById("toggle-icon");
 displayFilteredIcons();
-M.Tooltip.init(document.querySelectorAll('.tooltipped'), { outDuration: 0, inDuration: 300, enterDelay: 0, exitDelay: 10, transition: 10 });
+M.Tooltip.init(document.querySelectorAll('.tooltipped'), {
+    outDuration: 0,
+    inDuration: 300,
+    enterDelay: 0,
+    exitDelay: 10,
+    transition: 10
+});
 
 function toggleCondensed() {
     if (document.body.classList.contains("condensed")) {

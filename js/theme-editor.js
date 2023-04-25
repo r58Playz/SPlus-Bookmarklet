@@ -1,11 +1,10 @@
 const schoologyPlusLogoImageUrl = chrome.runtime.getURL("/imgs/schoology-plus-wide.svg");
 const schoologyLogoImageUrl = "https://ui.schoology.com/design-system/assets/schoology-logo-horizontal-white.884fbe559c66e06d28c5cfcbd4044f0e.svg";
 const lausdLegacyImageUrl = chrome.runtime.getURL("/imgs/lausd-legacy.png");
-const lausdNewImageUrl = chrome.runtime.getURL("/imgs/lausd-2019.png");
+const lausd2019ImageUrl = chrome.runtime.getURL("/imgs/lausd-2019.png");
+const lausd2022ImageUrl = chrome.runtime.getURL("/imgs/lausd-2022.png");
 const CURRENT_VERSION = SchoologyTheme.CURRENT_VERSION;
 const placeholderUrl = "https://via.placeholder.com/200x50?text=School+Logo";
-const LAUSD_THEMES = ["LAUSD Orange", "LAUSD Dark Blue"];
-const CLASSIC_THEMES = ["Schoology Plus", "Rainbow"]
 
 var defaultDomain = "app.schoology.com";
 
@@ -46,6 +45,7 @@ var themeBorderColor = document.getElementById("theme-border-color");
 var themeLinkColor = document.getElementById("theme-link-color");
 var themeSchoologyPlusLogo = document.getElementById("theme-schoology-plus-logo");
 var themeSchoologyLogo = document.getElementById("theme-schoology-logo");
+var themeLAUSDLogo2022 = document.getElementById("theme-lausd-logo-2022");
 var themeNewLAUSDLogo = document.getElementById("theme-new-lausd-logo");
 var themeLAUSDLogo = document.getElementById("theme-lausd-logo");
 var themeDefaultLogo = document.getElementById("theme-default-logo");
@@ -110,9 +110,17 @@ createPresetClassicTheme.addEventListener("click", e => editTheme("Schoology Plu
 var previewNavbar = document.getElementById("preview-navbar");
 var previewLogo = document.getElementById("preview-logo");
 var previewPage = document.getElementById("preview-page");
+var lastSelectedTemplate = null;
 
 var modernEnable = document.getElementById("modern-enable");
-modernEnable.addEventListener("click", e => trackEvent("modern-enable", modernEnable.checked.toString(), "Theme Editor"));
+modernEnable.addEventListener("click", e => trackEvent("update_setting", {
+    id: "modern-enable",
+    context: "Theme Editor",
+    value: modernEnable.checked.toString(),
+    legacyTarget: "modern-enable",
+    legacyAction: modernEnable.checked.toString(),
+    legacyLabel: "Theme Editor"
+}));
 var modernWrapper = document.getElementById("modern-wrapper");
 var modernBorderRadiusValue = document.getElementById("modern-border-radius-value");
 var modernBorderSizeValue = document.getElementById("modern-border-size-value");
@@ -124,14 +132,26 @@ splusModalClose.addEventListener("click", e => {
     e.stopPropagation();
     previewModal.classList.add("hidden");
     previewPage.classList.remove("hidden");
-    trackEvent("splus-modal-close", "click", "Theme Editor");
+    trackEvent("button_click", {
+        id: "close-preview-modal",
+        context: "Theme Editor",
+        legacyTarget: "splus-modal-close",
+        legacyAction: "click",
+        legacyLabel: "Theme Editor"
+    });
 });
 var previewSPlusButton = document.getElementById("preview-splus-button");
 previewSPlusButton.addEventListener("click", e => {
     e.stopPropagation();
     previewModal.classList.toggle("hidden");
     previewPage.classList.toggle("hidden");
-    trackEvent("preview-splus-button", "click", "Theme Editor");
+    trackEvent("button_click", {
+        id: "preview-splus-button",
+        context: "Theme Editor",
+        legacyTarget: "preview-splus-button",
+        legacyAction: "click",
+        legacyLabel: "Theme Editor"
+    });
 });
 
 class Modal {
@@ -164,7 +184,14 @@ class Modal {
             Modal.BUTTONS_CONTAINER.appendChild(createElement("a", ["modal-close", "waves-effect", "waves-dark", "btn-flat"], {
                 textContent: b,
                 onclick: e => {
-                    trackEvent("Modal Button", b, "Theme Editor");
+                    trackEvent("button_click", {
+                        id: "modal-button",
+                        context: "Theme Editor",
+                        value: b,
+                        legacyTarget: "Modal Button",
+                        legacyAction: b,
+                        legacyLabel: "Theme Editor"
+                    });
                     selected = b;
                 }
             }));
@@ -419,6 +446,9 @@ function renderTheme(t) {
         case "lausd_2019":
             themeNewLAUSDLogo.click();
             break;
+        case "lausd_2022":
+            themeLAUSDLogo2022.click();
+            break;
         case "default":
             themeDefaultLogo.click();
             break;
@@ -427,7 +457,7 @@ function renderTheme(t) {
             themeCustomLogo.click();
             break;
     }
-    $(themeHue).slider("value", t.color.hue);
+    $(themeHue).slider("value", t.color.hue || 200);
     colorRainbowHueAnimate.checked = false;
     colorRainbowHueSpeed.value = 50;
     $(colorRainbowHueRange).roundSlider("setValue", "0,359");
@@ -634,6 +664,38 @@ initPicker("modern-color-active", "#98d4e4", updateOutput, true);
 initPicker("modern-color-grades", "#009400");
 initPicker("modern-color-error", "#F44336");
 
+initPicker("modern-cal-1", "#d6e7f4");
+initPicker("modern-cal-2", "#d7e8cf");
+initPicker("modern-cal-3", "#f9e9d4");
+initPicker("modern-cal-4", "#e7e0e5");
+initPicker("modern-cal-5", "#e6b5c9");
+initPicker("modern-cal-6", "#f9f1cf");
+initPicker("modern-cal-7", "#daf0f9");
+initPicker("modern-cal-8", "#f9ddea");
+initPicker("modern-cal-9", "#fbd7d8");
+initPicker("modern-cal-10", "#f1f2d1");
+initPicker("modern-cal-11", "#e0e8f5");
+initPicker("modern-cal-12", "#fbd7e4");
+initPicker("modern-cal-13", "#fcddd3");
+initPicker("modern-cal-14", "#e7f2d5");
+initPicker("modern-cal-15", "#e6e0ee");
+initPicker("modern-cal-16", "#f0e5db");
+initPicker("modern-cal-17", "#fce8d1");
+initPicker("modern-cal-18", "#e1f1e7");
+initPicker("modern-cal-19", "#f0dfed");
+initPicker("modern-cal-20", "#e9e9ea");
+
+initPicker("modern-cal-21", "#00427c");
+initPicker("modern-cal-22", "#603073");
+initPicker("modern-cal-23", "#8b1941");
+initPicker("modern-cal-24", "#970c0c");
+initPicker("modern-cal-25", "#9c3b07");
+initPicker("modern-cal-26", "#685203");
+initPicker("modern-cal-27", "#2a5f16");
+initPicker("modern-cal-28", "#09584f");
+initPicker("modern-cal-29", "#005a75");
+initPicker("modern-cal-30", "#4d5557");
+
 initPicker("modern-color-text-primary", "#2A2A2A");
 initPicker("modern-color-text-muted", "#677583");
 initPicker("modern-color-text-contrast", "white");
@@ -651,6 +713,36 @@ var modernColorMap = {
     "#modern-color-text-primary": ["text", "primary", "modern-text"],
     "#modern-color-text-muted": ["text", "muted", "modern-muted-text"],
     "#modern-color-text-contrast": ["text", "contrast", "modern-contrast-text"],
+    "#modern-cal-1": ["calendar", 0, "cal1"],
+    "#modern-cal-2": ["calendar", 1, "cal2"],
+    "#modern-cal-3": ["calendar", 2, "cal3"],
+    "#modern-cal-4": ["calendar", 3, "cal4"],
+    "#modern-cal-5": ["calendar", 4, "cal5"],
+    "#modern-cal-6": ["calendar", 5, "cal6"],
+    "#modern-cal-7": ["calendar", 6, "cal7"],
+    "#modern-cal-8": ["calendar", 7, "cal8"],
+    "#modern-cal-9": ["calendar", 8, "cal9"],
+    "#modern-cal-10": ["calendar", 9, "cal10"],
+    "#modern-cal-11": ["calendar", 10, "cal11"],
+    "#modern-cal-12": ["calendar", 11, "cal12"],
+    "#modern-cal-13": ["calendar", 12, "cal13"],
+    "#modern-cal-14": ["calendar", 13, "cal14"],
+    "#modern-cal-15": ["calendar", 14, "cal15"],
+    "#modern-cal-16": ["calendar", 15, "cal16"],
+    "#modern-cal-17": ["calendar", 16, "cal17"],
+    "#modern-cal-18": ["calendar", 17, "cal18"],
+    "#modern-cal-19": ["calendar", 18, "cal19"],
+    "#modern-cal-20": ["calendar", 19, "cal20"],
+    "#modern-cal-21": ["calendar", 20, "cal21"],
+    "#modern-cal-22": ["calendar", 21, "cal22"],
+    "#modern-cal-23": ["calendar", 22, "cal23"],
+    "#modern-cal-24": ["calendar", 23, "cal24"],
+    "#modern-cal-25": ["calendar", 24, "cal25"],
+    "#modern-cal-26": ["calendar", 25, "cal26"],
+    "#modern-cal-27": ["calendar", 26, "cal27"],
+    "#modern-cal-28": ["calendar", 27, "cal28"],
+    "#modern-cal-29": ["calendar", 28, "cal29"],
+    "#modern-cal-30": ["calendar", 29, "cal30"],
 }
 
 function updateOutput() {
@@ -775,6 +867,7 @@ function updateOutput() {
         document.documentElement.setAttribute("modern", "true");
         modernWrapper.classList.remove("hidden");
         theme.color.modern = new ModernColorDefinition();
+        theme.color.modern.calendar = [];
         theme.color.modern.interface = new ModernInterfaceColorDefinition();
         theme.color.modern.text = new ModernTextColorDefinition();
         theme.color.modern.options = new ModernOptionsDefinition();
@@ -794,54 +887,6 @@ function updateOutput() {
         setCSSVariable("modern-border-size", `${modernBorderSizeValue.value}px`);
         setCSSVariable("modern-border-radius", `${modernBorderRadiusValue.value}px`);
         setCSSVariable("modern-padding", `${modernPaddingValue.value}px`);
-
-        if (theme.color.modern.dark) {
-            theme.color.modern.calendar = [
-                "#457da5",
-                "#547c41",
-                "#926c37",
-                "#7c3d6b",
-                "#0b4c9c",
-                "#00209c",
-                "#004a09",
-                "#72721a",
-                "#44233e",
-                "#683131",
-                "#770a0a",
-                "#a72413",
-                "#E0024C",
-                "#188C16",
-                "#bd7304",
-                "#80168C",
-                "#164152",
-                "#00543f",
-                "#633e11",
-                "#461b2d"
-            ];
-        } else {
-            theme.color.modern.calendar = [
-                "#d6e7f4",
-                "#d7e8cf",
-                "#f9e9d4",
-                "#e7e0e5",
-                "#e6b5c9",
-                "#f9f1cf",
-                "#daf0f9",
-                "#f9ddea",
-                "#fbd7d8",
-                "#f1f2d1",
-                "#e0e8f5",
-                "#fbd7e4",
-                "#fcddd3",
-                "#e7f2d5",
-                "#e6e0ee",
-                "#f0e5db",
-                "#fce8d1",
-                "#e1f1e7",
-                "#f0dfed",
-                "#e9e9ea"
-            ];
-        }
     } else {
         document.documentElement.setAttribute("modern", "false");
         modernWrapper.classList.add("hidden");
@@ -855,9 +900,12 @@ function updateOutput() {
     } else if (themeSchoologyLogo.checked) {
         theme.logo = new ThemeLogo(undefined, "schoology_logo");
         setCSSVariable("background-url", `url(${schoologyLogoImageUrl})`);
+    } else if (themeLAUSDLogo2022.checked) {
+        theme.logo = new ThemeLogo(undefined, "lausd_2022");
+        setCSSVariable("background-url", `url(${lausd2022ImageUrl})`);
     } else if (themeNewLAUSDLogo.checked) {
         theme.logo = new ThemeLogo(undefined, "lausd_2019");
-        setCSSVariable("background-url", `url(${lausdNewImageUrl})`);
+        setCSSVariable("background-url", `url(${lausd2019ImageUrl})`);
     } else if (themeLAUSDLogo.checked) {
         theme.logo = new ThemeLogo(undefined, "lausd_legacy");
         setCSSVariable("background-url", `url(${lausdLegacyImageUrl})`);
@@ -874,6 +922,8 @@ function updateOutput() {
                 }
                 setCSSVariable("background-url", `url(${themeLogo.value})`);
             }, () => errors.push("Logo URL does not point to a valid image"));
+        } else {
+            errors.push("No logo URL is specified");
         }
     }
 
@@ -955,12 +1005,57 @@ function trySaveTheme(apply = false) {
  * If the querystring parameter `theme` exists, it will rename the theme with that value
  * @param {boolean} [apply=false] If true, applies the theme and returns to defaultDomain
  */
-function saveTheme(apply = false) {
+function saveTheme(apply = false, imported = false) {
     if (errors.length > 0) throw new Error("Please fix all errors before saving the theme:\n" + errors.join("\n"));
     let t = JSON.parse(output.value);
     if (origThemeName && t.name != origThemeName) {
         ConfirmModal.open("Rename Theme?", `Are you sure you want to rename "${origThemeName}" to "${t.name}"?`, ["Rename", "Cancel"], b => b === "Rename" && doSave(t));
-    } else {
+    } else {       
+        trackEvent("perform_action", {
+            id: "color_type",
+            context: "New Theme Created",
+            value: Object.keys(t.color).find(k => k !== "modern"),
+            legacyTarget: "color_type",
+            legacyAction: Object.keys(t.color).find(k => k !== "modern"),
+            legacyLabel: "New Theme Created"
+        });
+
+        trackEvent("perform_action", {
+            id: "logo_type",
+            context: "New Theme Created",
+            value: t.logo.preset || "custom",
+            legacyTarget: "logo_type",
+            legacyAction: t.logo.preset || "custom",
+            legacyLabel: "New Theme Created"
+        });
+
+        trackEvent("perform_action", {
+            id: "cursor_type",
+            context: "New Theme Created",
+            value: t.cursor ? "primary" : "none",
+            legacyTarget: "cursor_type",
+            legacyAction: t.cursor ? "primary" : "none",
+            legacyLabel: "New Theme Created"
+        });
+
+        trackEvent("perform_action", {
+            id: "modern_enabled",
+            context: "New Theme Created",
+            value: String(!!t.color.modern),
+            legacyTarget: "modern_enabled",
+            legacyAction: String(!!t.color.modern),
+            legacyLabel: "New Theme Created"
+        });
+
+        trackEvent("perform_action", {
+            id: "preset",
+            context: "New Theme Created",
+            value: imported ? "Imported" : lastSelectedTemplate,
+            legacyTarget: "preset",
+            legacyAction: imported ? "Imported" : lastSelectedTemplate,
+            legacyLabel: "New Theme Created"
+        });
+
         doSave(t);
     }
 
@@ -971,8 +1066,8 @@ function saveTheme(apply = false) {
             chrome.storage.sync.set({ themes: themes }, () => {
                 if (chrome.runtime.lastError) {
                     if (chrome.runtime.lastError.message.includes("QUOTA_BYTES_PER_ITEM")) {
-                        alert("No space remaining to save theme. Please delete another theme or make this theme smaller in order to save.");
-                        throw new Error("No space remaining to save theme. Please delete another theme or make this theme smaller in order to save.");
+                        alert("No space remaining to save theme. Please delete another theme or make this theme smaller in order to save. Most commonly themes are too large if they have too many custom icons.");
+                        throw new Error("No space remaining to save theme. Please delete another theme or make this theme smaller in order to save. Most commonly themes are too large if they have too many custom icons.");
                     }
                 }
                 ConfirmModal.open("Theme saved successfully", "", ["OK"], () => {
@@ -1086,7 +1181,15 @@ function applyTheme(t) {
 function deleteTheme(name) {
     ConfirmModal.open("Delete Theme?", `Are you sure you want to delete the theme "${name}"?\nThe page will reload when the theme is deleted.`, ["Delete", "Cancel"], b => {
         if (b === "Delete") {
-            trackEvent(`Theme: ${name}`, "delete", "Theme List");
+            trackEvent("button_click", {
+                id: "delete-theme",
+                context: "Theme List",
+                value: name,
+                legacyTarget: `Theme: ${name}`,
+                legacyAction: "delete",
+                legacyLabel: "Theme List"
+            });
+            
             chrome.storage.sync.get(["theme", "themes"], s => {
                 chrome.storage.sync.set({ theme: s.theme == name ? null : s.theme, themes: s.themes.filter(x => x.name != name) }, () => window.location.reload());
             });
@@ -1100,7 +1203,17 @@ function deleteTheme(name) {
  * @param {string} [name] The theme to edit
  */
 function editTheme(name, replaceName = undefined) {
-    trackEvent(`Theme: ${name}`, "edit", "Theme List");
+    if (replaceName) {
+        lastSelectedTemplate = name;
+    }
+    trackEvent("button_click", {
+        id: "edit-theme",
+        context: "Theme List",
+        value: name,
+        legacyTarget: `Theme: ${name}`,
+        legacyAction: "edit",
+        legacyLabel: "Theme List"
+    });
     clearInterval(rainbowInterval);
     themesListSection.classList.add("hidden");
     themeEditorSection.classList.remove("hidden");
@@ -1126,7 +1239,7 @@ function importTheme() {
             try {
                 let j = JSON.parse(text);
                 importAndRender(j);
-                saveTheme();
+                saveTheme(false, true);
             }
             catch {
                 ConfirmModal.open("Error Importing Theme", errors.length > 0 ? errors.join() : "Please provide a valid JSON string", ["OK"]);
@@ -1195,7 +1308,13 @@ function generateRainbowFunction(theme) {
 }
 
 function addIcon() {
-    trackEvent("new-icon", "click", "Theme Editor");
+    trackEvent("button_click", {
+        id: "add-theme-icon",
+        context: "Theme Editor",
+        legacyTarget: "new-icon",
+        legacyAction: "click",
+        legacyLabel: "Theme Editor"
+    });
     let template = `<td style=text-align:center><a class="action-button tooltipped arrow-button move-down"data-tooltip="Move Down"><i class=material-icons>arrow_downward</i> </a><a class="action-button tooltipped arrow-button move-up"data-tooltip="Move Up"><i class=material-icons>arrow_upward</i></a><td class=class-name data-text="Class Name Pattern"><td class=icon-url data-text="Icon URL or paste/drop image"><td><img class="small-icon-preview" height=32/></td><td><a class="action-button tooltipped btn-flat delete-icon-button right waves-effect waves-light"data-tooltip=Delete><i class=material-icons>delete</i></a>`;
     let tr = document.createElement("tr");
     tr.innerHTML = template;
@@ -1249,7 +1368,14 @@ function uploadAndPaste(pasteEvent) {
                 } else {
                     document.execCommand('paste', false, link);
                 }
-                trackEvent("icon-image", "paste", "Theme Editor");
+                trackEvent("perform_action", {
+                    id: "paste",
+                    context: "Theme Editor",
+                    value: "icon-image",
+                    legacyTarget: "icon-image",
+                    legacyAction: "paste",
+                    legacyLabel: "Theme Editor"
+                });
                 preview.src = link;
                 pasteEvent.target.dataset.text = pasteEvent.target.dataset.originalText;
                 pasteEvent.target.dataset.originalText = "";
@@ -1301,7 +1427,13 @@ function moveDown(e) {
 }
 
 function deleteIcon(e) {
-    trackEvent("delete-icon-button", "click", "Theme Editor");
+    trackEvent("button_click", {
+        id: "delete-theme-icon",
+        context: "Theme Editor",
+        legacyTarget: "delete-icon-button",
+        legacyAction: "click",
+        legacyLabel: "Theme Editor"
+    });
     let target = e.target;
     while (target.tagName != "TR") target = target.parentElement;
     M.Tooltip.getInstance(target.querySelector(".delete-icon-button")).destroy();
@@ -1338,7 +1470,14 @@ function iconPreview(e) {
 }
 
 function copyThemeToClipboard(themeName) {
-    trackEvent(`Theme: ${themeName}`, "copy", "Theme List");
+    trackEvent("button_click", {
+        id: "copy-theme",
+        context: "Theme List",
+        value: themeName,
+        legacyTarget: `Theme: ${themeName}`,
+        legacyAction: "copy",
+        legacyLabel: "Theme List"
+    });
     let text = JSON.stringify(allThemes[themeName]);
     var copyFrom = $('<textarea/>');
     copyFrom.text(text);
@@ -1404,7 +1543,14 @@ function handleDrop(e, region, preview, property) {
     }
 
     function success(link, toast) {
-        trackEvent("icon-image", "drop", "Theme Editor");
+        trackEvent("perform_action", {
+            id: "drop",
+            context: "Theme Editor",
+            value: "icon-image",
+            legacyTarget: "icon-image",
+            legacyAction: "drop",
+            legacyLabel: "Theme Editor"
+        });
         if (toast) {
             toast.dismiss();
         }
@@ -1559,11 +1705,11 @@ $(document).ready(function () {
     }
 
     for (let t of __defaultThemes) {
+        defaultThemes.push(t.name);
         if (!isLAUSD() && LAUSD_THEMES.includes(t.name)) {
             continue;
         }
         allThemes[t.name] = t;
-        defaultThemes.push(t.name);
     }
 
     chrome.storage.sync.get(["theme", "themes"], s => {

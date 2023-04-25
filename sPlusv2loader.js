@@ -1,7 +1,11 @@
 (async function () {
+    if (window.location.pathname.includes("sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage") ||
+        window.location.pathname.includes("ReaderControl.html") ||
+        window.location.pathname.includes("session-tracker.html")
+    ) return;
     // +++++++++++++++++++++++++++++++++++++++++++++ CONFIG +++++++++++++++++++++++++++++++++++++++++++++++++
     // Where this script is hosted. used to properly inject extension's files
-    var SPLUSbase_url = 'https://splus.r58playz.ml/' /*'http://localhost:8080/'*/ /*'https://8080-r58playz-splusbookmarkl-0tqywk20cc2.ws-us63.gitpod.io/'*/;
+    var SPLUSbase_url = /*'https://splus.r58playz.ml/'*/ 'http://localhost:8000/';
     // Where extension API stubs are defined
     var SPLUSext_apis_file = "js/extension-apis.js"
     
@@ -18,7 +22,6 @@
     notifdiv.innerHTML = "Loading Schoology Plus...";
     notifdiv.id = "SPLUS_NOTIF_DIV";
     document.body.appendChild(notifdiv);
-    document.querySelector("link[rel='shortcut icon']").href = SPLUSbase_url + "imgs/icon@1024.png"
     var cLog = console.log.bind(window.console, "%c+", lp());
     var cDebug = console.debug.bind(window.console, "%c+", lp());
     function lp() {
@@ -63,8 +66,8 @@
                 "css/modern/all.css"
             ],
             "js": [
-                "js/predefs.js",
                 "js/loader.js",
+                "js/settings.js",
                 "js/icons.js",
                 "js/default-themes.js",
                 "js/theme.js",

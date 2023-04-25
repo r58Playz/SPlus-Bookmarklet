@@ -4,10 +4,8 @@
         await new Promise(resolve => setTimeout(resolve, 10));
     }
     await loadDependencies("assessment", ["all"]);
-})();
 
-// modifications to Confirm Submission assessment popup
-(function () {
+    // modifications to Confirm Submission assessment popup
     /**
      * The array of handlers to call on a newly-added Confirm Submission popup.
      * @type Array<function(Element):void>
@@ -16,9 +14,9 @@
 
     // Firefox patch for assessment submit confirmation
     if (getBrowser() == "Firefox") {
-        modificationHooks.push(function (addedElem) {
+        modificationHooks.push(function(addedElem) {
             let yesBtn = addedElem.querySelector("#popup_confirm");
-            yesBtn.onclick = function () {
+            yesBtn.onclick = function() {
                 // reimplement the confirm-submit logic, because it apparently doesn't work in page JS once we touch the page
 
                 // firefox-specific way to break down content script isolation; used to access a setting used by Schoology's JS
@@ -41,7 +39,7 @@
     }
 
     // unanswered questions warning
-    modificationHooks.push(function (addedElem) {
+    modificationHooks.push(function(addedElem) {
         // same CSS selector as they use to put the warning icon
         let unansweredQuestionCount = document.querySelectorAll(".review-page .no-answer-provided, .user-submissions .no-answer-provided").length;
         if (unansweredQuestionCount > 0) {
@@ -67,7 +65,7 @@
     });
 
     // set up the observer
-    let popupObserver = new MutationObserver(function (mutationList) {
+    let popupObserver = new MutationObserver(function(mutationList) {
         for (let mutation of mutationList) {
             for (let addedElem of mutation.addedNodes) {
                 if (addedElem.tagName == "DIV" && addedElem.id.startsWith("popups-") && addedElem.classList.contains("popups-box")) {
@@ -86,6 +84,6 @@
         childList: true,
         subtree: false
     });
-})();
 
-Logger.debug("Finished loading assessment.js");
+    Logger.debug("Finished loading assessment.js");
+})();

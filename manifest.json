@@ -10,7 +10,7 @@
             "update_url": "https://schoologypl.us/firefox_updates.json"
         }
     },
-    "version": "7.4.2",
+    "version": "7.8.1",
     "icons": {
         "128": "imgs/icon@128.png",
         "64": "imgs/icon@64.png",
@@ -78,7 +78,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "css": [
                 "css/all.css",
@@ -114,14 +114,16 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "css": [
                 "lib/css/contextmenu.css",
-                "lib/css/iziToast.min.css"
+                "lib/css/iziToast.min.css",
+                "/lib/css/jquery-ui.min.css"
             ],
             "js": [
                 "lib/js/jquery-3.3.1.min.js",
+                "/lib/js/jquery-ui.min.js",
                 "lib/js/contextmenu.js",
                 "lib/js/iziToast.min.js",
                 "js/version-specific.js",
@@ -151,7 +153,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "css": [
                 "css/grades.css"
@@ -181,7 +183,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "css": [
                 "css/materials.css"
@@ -222,7 +224,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/course.js",
@@ -271,7 +273,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/user.js"
@@ -300,7 +302,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/assessment.js"
@@ -326,7 +328,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/page.js"
@@ -354,7 +356,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/course.js",
@@ -381,7 +383,7 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://lti-submission-google.app.schoology.com/*"
             ],
             "js": [
                 "js/all-idle.js"
