@@ -5,34 +5,7 @@
     // Where extension API stubs are defined
     var SPLUSext_apis_file = "js/extension-apis.js"
     
-    // fuck you all
-    function getCookie(name) {
-        var dc = document.cookie;
-        var prefix = name + "=";
-        var begin = dc.indexOf("; " + prefix);
-        if (begin == -1) {
-            begin = dc.indexOf(prefix);
-            if (begin != 0) return null;
-        }
-        else
-        {
-            begin += 2;
-            var end = document.cookie.indexOf(";", begin);
-            if (end == -1) {
-            end = dc.length;
-            }
-        }
-        // because unescape has been deprecated, replaced with decodeURI
-        return decodeURI(dc.substring(begin + prefix.length, end));
-    } 
-    var isDecentlySmart = getCookie("gjyoueitherlookedinthecodeoraskedme");
-    if (isDecentlySmart == null) {
-        // fuck you idiot
-        document.open();
-        document.write('<video autoplay="" loop="" id="thanks kait!" style="z-index=99999999999999" width="100%" height="100%"><source src="https://cdn.r58playz.ml/nofuckoff.mp4" type="video/mp4"><source src="https://cdn.r58playz.ml/byebyetroller.mp4" type="video/ogg"></video>');
-        document.close();
-        return
-    }
+    // skid detection code used to be here but eh anyone can use it now
     
     var notifdiv = document.createElement('div');
     notifdiv.style.setProperty("z-index", "99999");
