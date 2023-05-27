@@ -206,9 +206,9 @@
         "6.2": function(currentVersion, previousVersion) {
             if (window.splus.getBrowser() !== "Firefox") {
                 var modalExistsInterval = setInterval(function() {
-                    if (document.readyState === "complete" && window.splus.openModal && document.getElementById("analytics-modal") && !document.querySelector(".splus-modal-open")) {
+                    if (document.readyState === "complete" && window.splus.window.splus.openModal && document.getElementById("analytics-modal") && !document.querySelector(".splus-modal-open")) {
                         clearInterval(modalExistsInterval);
-                        window.splus.openModal("analytics-modal");
+                        window.splus.window.splus.openModal("analytics-modal");
                     }
                 }, 50);
             }
@@ -238,9 +238,9 @@
         },
         "7.1": function(currentVersion, previousVersion) {
             var modalExistsInterval = setInterval(function() {
-                if (document.readyState === "complete" && window.splus.openModal && document.getElementById("choose-theme-modal") && !document.querySelector(".splus-modal-open")) {
+                if (document.readyState === "complete" && window.splus.window.splus.openModal && document.getElementById("choose-theme-modal") && !document.querySelector(".splus-modal-open")) {
                     clearInterval(modalExistsInterval);
-                    window.splus.openModal("choose-theme-modal");
+                    window.splus.window.splus.openModal("choose-theme-modal");
                 }
             }, 50);
         },
@@ -279,7 +279,7 @@
         },
         "7.7": function(currentVersion, previousVersion) {
             var accessToAccountInterval = setInterval(function() {
-                if (document.readyState === "complete" && window.splus.openModal && !document.querySelector(".splus-modal-open")) {
+                if (document.readyState === "complete" && window.splus.window.splus.openModal && !document.querySelector(".splus-modal-open")) {
                     clearInterval(accessToAccountInterval);
                     if (!Setting.getValue("apistatus")) {
                         location.pathname = "/api";
@@ -323,5 +323,6 @@
         }
     }
 
-
+    window.splus.Logger.debug("Finished loading version-specific.js");
+    window.splusLoaded.add("version-specific");
 })();

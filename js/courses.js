@@ -39,7 +39,7 @@
                         legacyAction: "click",
                         legacyLabel: "Courses Context Menu"
                     });
-                    openModal("course-settings-modal", {
+                    window.splus.openModal("course-settings-modal", {
                         courseId: this[0].querySelector(".section-item").id.match(/\d+/)[0],
                         courseName: `${this[0].querySelector(".course-title").textContent}: ${this[0].querySelector(".section-item").textContent}`
                     });
@@ -121,4 +121,5 @@
     }
 
     Logger.debug("Finished loading courses.js");
+    window.splusLoaded.add("courses");
 })();

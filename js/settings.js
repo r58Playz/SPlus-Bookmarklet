@@ -37,7 +37,7 @@
 
         if (element.id === "settings-modal" && element.style.display !== "none" && window.splus.Setting.anyModified()) {
             if (!confirm("You have unsaved settings.\nAre you sure you want to exit?")) return;
-            updateSettings();
+            window.splus.updateSettings();
         } else if (element.id === "choose-theme-modal" && element.style.display === "block" && !localStorage.getItem("splus-temp-theme-chosen")) {
             alert("Please use the 'Select' button to confirm your choice.");
             return;
@@ -217,7 +217,7 @@
                 }
             }
 
-            updateSettings(callback);
+            window.splus.updateSettings(callback);
         });
 
         if (updateButtonText) {
@@ -235,10 +235,10 @@
     window.splus.Setting.restoreDefaults = function() {
         if (confirm("Are you sure you want to delete all settings?\nTHIS CANNOT BE UNDONE")) {
             trackEvent("restore-defaults", "restore default values", "Setting");
-            for (let setting in __settings) {
-                delete __storage[setting];
+            for (let setting in window.splus.__settings) {
+                delete window.splus.__storage[setting];
                 chrome.storage.sync.remove(setting);
-                __settings[setting].onload(undefined, __settings[setting].getElement());
+                window.splus.__settings[setting].onload(undefined, window.splus.__settings[setting].getElement());
             }
             location.reload();
         }
@@ -256,7 +256,7 @@
             legacyLabel: "Setting"
         });
 
-        navigator.clipboard.writeText(JSON.stringify(__storage, null, 2))
+        navigator.clipboard.writeText(JSON.stringify(window.splus.__storage, null, 2))
             .then(() => alert("Copied settings to clipboard!"))
             .catch(err => alert("Exporting settings failed!"));
     }
@@ -329,8 +329,8 @@
      * @returns {boolean} `true` if any setting has been modified
      */
     window.splus.Setting.anyModified = function() {
-        for (let setting in __settings) {
-            if (__settings[setting].modified) {
+        for (let setting in window.splus.__settings) {
+            if (window.splus.__settings[setting].modified) {
                 return true;
             }
         }
@@ -463,6 +463,577 @@
      */
     window.splus.isLAUSD = function() {
         return window.splus.Setting.getValue("defaultDomain") === "lms.lausd.net";
+    }
+
+    var firstLoad = true;
+
+    /**
+     * Updates the contents of the settings modal to reflect changes made by the user to all settings
+     * @param {()=>any} callback Called after settings are updated
+     */
+    window.splus.updateSettings = (callback) => {
+        chrome.storage.sync.get(null, storageContents => {
+            window.splus.__storage = storageContents;
+
+            // wrapper functions for e.g. defaults
+            window.splus.__storage.getGradingScale = function(courseId) {
+                let defaultGradingScale = {
+                    "90": "A",
+                    "80": "B",
+                    "70": "C",
+                    "60": "D",
+                    "0": "F"
+                };
+
+                if (window.splus.__storage.defaultGradingScale) {
+                    defaultGradingScale = window.splus.__storage.defaultGradingScale;
+                }
+
+                if (courseId !== null && window.splus.__storage.gradingScales && window.splus.__storage.gradingScales[courseId]) {
+                    return window.splus.__storage.gradingScales[courseId];
+                }
+
+                return defaultGradingScale;
+            }
+
+            if (firstLoad) {
+                if (storageContents.themes) {
+                    for (let t of storageContents.themes) {
+                        themes.push(window.splus.Theme.loadFromObject(t));
+                    }
+                }
+
+                window.splus.Theme.apply(window.splus.Theme.active);
+                firstLoad = false;
+            }
+
+            let noControl = document.createElement("div");
+
+            modalContents = createElement("div", [], undefined, [
+                createElement("div", ["splus-modal-contents", "splus-settings-tabs"], {}, [
+                    createElement("ul", [], {}, [
+                        createElement("li", [], {}, [createElement("a", [], {
+                            href: "#splus-settings-section-appearance",
+                            textContent: "Appearance"
+                        })]),
+                        createElement("li", [], {}, [createElement("a", [], {
+                            href: "#splus-settings-section-sidebar",
+                            textContent: "Homepage/Sidebar"
+                        })]),
+                        createElement("li", [], {}, [createElement("a", [], {
+                            href: "#splus-settings-section-grades",
+                            textContent: "Grades"
+                        })]),
+                        createElement("li", [], {}, [createElement("a", [], {
+                            href: "#splus-settings-section-utilities",
+                            textContent: "Utilities"
+                        })]),
+                    ]),
+                    createElement("div", [], {
+                        id: "splus-settings-section-appearance"
+                    }, [
+                        new window.splus.Setting(
+                            "themeEditor",
+                            "Theme Editor",
+                            "Click to open the theme editor to create, edit, or select a theme",
+                            "Theme Editor",
+                            "button", {},
+                            value => "Theme Editor",
+                            event => window.splus.openModal('theme-editor-modal')
+                        ).control,
+                        new window.splus.Setting(
+                            "theme",
+                            "Theme",
+                            "Change the theme of Schoology Plus",
+                            "Schoology Plus",
+                            "select", {
+                                options: [
+                                    ...window.splus.__defaultThemes.filter(
+                                        t => window.splus.LAUSD_THEMES.includes(t.name) ? window.splus.isLAUSD() : true
+                                    ).map(t => {
+                                        return {
+                                            text: t.name,
+                                            value: t.name
+                                        }
+                                    }),
+                                    ...(window.splus.__storage.themes || []).map(
+                                        t => {
+                                            return {
+                                                text: t.name,
+                                                value: t.name
+                                            }
+                                        }
+                                    )
+                                ]
+                            },
+                            value => {
+                                tempTheme = undefined;
+                                window.splus.Theme.apply(window.splus.Theme.active);
+                                return value;
+                            },
+                            event => {
+                                tempTheme = event.target.value;
+                                window.splus.Theme.apply(window.splus.Theme.byName(event.target.value));
+                            },
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "courseIcons",
+                            "Override Course Icons",
+                            "[Refresh required to disable] Replace the course icons with the selected theme's icons",
+                            window.splus.isLAUSD() ? "enabled" : "defaultOnly",
+                            "select", {
+                                options: [{
+                                    text: "All Icons",
+                                    value: "enabled"
+                                }, {
+                                    text: "Default Icons Only",
+                                    value: "defaultOnly",
+                                }, {
+                                    text: "Disabled",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "useDefaultIconSet",
+                            "Use Built-In Icon Set",
+                            `[Refresh required] Use Schoology Plus's <a href="${chrome.runtime.getURL("/default-icons.html")}" target="_blank">default course icons</a> as a fallback when a custom icon has not been specified. NOTE: these icons were meant for schools in Los Angeles Unified School District and may not work correctly for other schools.`,
+                            window.splus.isLAUSD() ? "enabled" : "disabled",
+                            "select", {
+                                options: [{
+                                    text: "Enabled",
+                                    value: "enabled"
+                                }, {
+                                    text: "Disabled",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "overrideUserStyles",
+                            "Override Styled Text",
+                            "Override styled text in homefeed posts and discussion responses when using modern themes. WARNING: This guarantees text is readable on dark theme, but removes colors and other styling that may be important. You can always use the Toggle Theme button on the navigation bar to temporarily disble your theme.",
+                            "true",
+                            "select", {
+                                options: [{
+                                    text: "Enabled",
+                                    value: "true"
+                                }, {
+                                    text: "Disabled",
+                                    value: "false"
+                                }]
+                            },
+                            value => {
+                                document.documentElement.setAttribute("style-override", value);
+                                return value;
+                            },
+                            function(event) {
+                                this.onload(event.target.value)
+                            },
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "archivedCoursesButton",
+                            "Archived Courses Button",
+                            'Adds a link to see past/archived courses in the courses dropdown',
+                            "show",
+                            "select", {
+                                options: [{
+                                    text: "Show",
+                                    value: "show"
+                                }, {
+                                    text: "Hide",
+                                    value: "hide"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "helpCenterFAB",
+                            "Schoology Help Button",
+                            "Controls the visibility of the S button in the bottom right that shows the Schoology Guide Center",
+                            "hidden",
+                            "select", {
+                                options: [{
+                                    text: "Show",
+                                    value: "visible"
+                                }, {
+                                    text: "Hide",
+                                    value: "hidden"
+                                }]
+                            },
+                            value => {
+                                window.splus.setCSSVariable("help-center-fab-visibility", value);
+                                return value;
+                            },
+                            function(event) {
+                                this.onload(event.target.value)
+                            },
+                            element => element.value
+                        ).control,
+                    ]),
+                    createElement("div", [], {
+                        id: "splus-settings-section-sidebar"
+                    }, [
+                        new window.splus.Setting(
+                            "indicateSubmission",
+                            "Submitted Assignments Checklist",
+                            '[Reload required] Shows a checkmark, shows a strikethrough, or hides items in "Upcoming Assignments" that have been submitted. If "Show Check Mark" is selected, a checklist function will be enabled allowing you to manually mark assignments as complete.',
+                            "check",
+                            "select", {
+                                options: [{
+                                    text: "Show Check Mark ✔ (Enables manual checklist)",
+                                    value: "check"
+                                }, {
+                                    text: "Show Strikethrough (Doesn't allow manual checklist)",
+                                    value: "strikethrough"
+                                }, {
+                                    text: "Hide Assignment (Not recommended)",
+                                    value: "hide"
+                                }, {
+                                    text: "Do Nothing",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "toDoIconVisibility",
+                            '"Overdue" and "Due Tomorrow" Icon Visibility',
+                            'Controls the visibility of the "Overdue" exclamation point icon and the "Due Tomorrow" clock icon in the Upcoming and Overdue lists on the sidebar of the homepage',
+                            "visible",
+                            "select", {
+                                options: [{
+                                    text: "Show Icons",
+                                    value: "visible"
+                                }, {
+                                    text: "Hide Icons",
+                                    value: "hidden"
+                                }]
+                            },
+                            value => {
+                                window.splus.setCSSVariable("to-do-list-icons-display", "block");
+                                switch (value) {
+                                    case "hidden":
+                                        window.splus.setCSSVariable("to-do-list-icons-display", "none");
+                                        break;
+                                }
+                                return value;
+                            },
+                            function(event) {
+                                this.onload(event.target.value)
+                            },
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "sidebarSectionOrder",
+                            "Customize Sidebar",
+                            "", {
+                                include: [],
+                                exclude: []
+                            },
+                            "custom", {
+                                element: createElement("div", [], {}, [
+                                    createElement("p", [], {
+                                        style: {
+                                            fontWeight: "normal"
+                                        },
+                                        textContent: "Drag items between the sections to control which sections of the sidebar are visible and the order in which they are shown."
+                                    }),
+                                    createElement("div", ["sortable-container"], {}, [
+                                        createElement("div", ["sortable-list"], {}, [
+                                            createElement("h3", ["splus-underline-heading"], {
+                                                textContent: "Sections to Hide"
+                                            }),
+                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], {
+                                                id: "sidebar-excluded-sortable"
+                                            })
+                                        ]),
+                                        createElement("div", ["sortable-list"], {}, [
+                                            createElement("h3", ["splus-underline-heading"], {
+                                                textContent: "Sections to Show"
+                                            }),
+                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], {
+                                                id: "sidebar-included-sortable"
+                                            })
+                                        ]),
+                                    ])
+                                ]),
+                            },
+                            function(value, element) {
+                                let includeList = element.querySelector("#sidebar-included-sortable");
+                                let excludeList = element.querySelector("#sidebar-excluded-sortable");
+
+                                includeList.innerHTML = "";
+                                excludeList.innerHTML = "";
+
+                                if (!value || !value.include || !value.exclude) {
+                                    value = {
+                                        include: [],
+                                        exclude: []
+                                    };
+                                }
+
+                                for (let section of value.include) {
+                                    includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {
+                                        textContent: section
+                                    }))
+                                }
+
+                                for (let section of value.exclude) {
+                                    excludeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {
+                                        textContent: section
+                                    }))
+                                }
+
+                                for (let section of window.splus.SIDEBAR_SECTIONS) {
+                                    if (!value.include.includes(section.name) && !value.exclude.includes(section.name)) {
+                                        includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {
+                                            textContent: section.name
+                                        }))
+                                    }
+                                }
+                            },
+                            function(event) {
+                                console.log(event);
+                            },
+                            element => {
+                                let includeList = element.querySelector("#sidebar-included-sortable");
+                                let excludeList = element.querySelector("#sidebar-excluded-sortable");
+
+                                return {
+                                    include: Array.from(includeList.children).map(e => e.textContent),
+                                    exclude: Array.from(excludeList.children).map(e => e.textContent)
+                                }
+                            },
+                            function() {
+                                $(".sidebar-sortable").sortable({
+                                    connectWith: ".sidebar-sortable",
+                                    stop: () => window.splus.Setting.onModify(this.getElement())
+                                }).disableSelection();
+                            }
+                        ).control,
+                    ]),
+                    createElement("div", [], {
+                        id: "splus-settings-section-grades"
+                    }, [
+                        new window.splus.Setting(
+                            "customScales",
+                            "Custom Grading Scales",
+                            "[Refresh required] Uses custom grading scales (set per-course in course settings) when courses don't have one defined",
+                            "enabled",
+                            "select", {
+                                options: [{
+                                    text: "Enabled",
+                                    value: "enabled"
+                                }, {
+                                    text: "Disabled",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "orderClasses",
+                            "Order Classes",
+                            "[Refresh required] Changes the order of your classes on the grades and mastery pages (only works if your course names contain PER N or PERIOD N)",
+                            "period",
+                            "select", {
+                                options: [{
+                                    text: "By Period",
+                                    value: "period"
+                                }, {
+                                    text: "Alphabetically",
+                                    value: "alpha"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "weightedGradebookIndicator",
+                            "Weighted Gradebook Indicator",
+                            "Adds an indicator next to gradebooks which are weighted",
+                            "enabled",
+                            "select", {
+                                options: [{
+                                    text: "Show",
+                                    value: "enabled"
+                                }, {
+                                    text: "Hide",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => {
+                                window.splus.setCSSVariable("weighted-gradebook-indicator-display", value == "enabled" ? "inline" : "none")
+                                return value;
+                            },
+                            function(event) {
+                                this.onload(event.target.value)
+                            },
+                            element => element.value
+                        ).control,
+                    ]),
+                    createElement("div", [], {
+                        id: "splus-settings-section-utilities"
+                    }, [
+                        new window.splus.Setting(
+                            "notifications",
+                            "Desktop Notifications",
+                            "Displays desktop notifications and a number badge on the extension button when new grades are entered",
+                            "enabled",
+                            "select", {
+                                options: [{
+                                    text: "Enable All Notifications",
+                                    value: "enabled"
+                                }, {
+                                    text: "Number Badge Only (No Pop-Ups)",
+                                    value: "badge"
+                                }, {
+                                    text: "Pop-Ups Only (No Badge)",
+                                    value: "popup"
+                                }, {
+                                    text: "Disable All Notifications",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "broadcasts",
+                            "Announcement Notifications",
+                            "Displays news feed posts for announcements sent to all Schoology Plus users",
+                            "enabled",
+                            "select", {
+                                options: [{
+                                    text: "Enable Announcements",
+                                    value: "enabled"
+                                }, {
+                                    text: "Disable Announcements",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "autoBypassLinkRedirects",
+                            "Automatically Bypass Link Redirects",
+                            "Automatically skip the external link redirection page, clicking 'Continue' by default",
+                            "enabled",
+                            "select", {
+                                options: [{
+                                    text: "Enabled",
+                                    value: "enabled"
+                                }, {
+                                    text: "Disabled",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "sessionCookiePersist",
+                            "Stay Logged In",
+                            "[Logout/login required] Stay logged in to Schoology when you restart your browser",
+                            "disabled",
+                            "select", {
+                                options: [{
+                                    text: "Enabled",
+                                    value: "enabled"
+                                }, {
+                                    text: "Disabled",
+                                    value: "disabled"
+                                }]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        createElement("div", ["setting-entry"], {}, [
+                            createElement("h2", ["setting-title"], {}, [
+                                createElement("a", [], {
+                                    href: "#",
+                                    textContent: "Change Schoology Account Access",
+                                    onclick: () => {
+                                        location.pathname = "/api";
+                                    },
+                                    style: {
+                                        fontSize: ""
+                                    }
+                                })
+                            ]),
+                            createElement("p", ["setting-description"], {
+                                textContent: "Grant Schoology Plus access to your Schoology API Key so many features can function, or revoke that access."
+                            })
+                        ]),
+                        window.splus.getBrowser() !== "Firefox" ? createElement("div", ["setting-entry"], {}, [
+                            createElement("h2", ["setting-title"], {}, [
+                                createElement("a", [], {
+                                    href: "#",
+                                    textContent: "Anonymous Usage Statistics",
+                                    onclick: () => window.splus.openModal("analytics-modal"),
+                                    style: {
+                                        fontSize: ""
+                                    }
+                                })
+                            ]),
+                            createElement("p", ["setting-description"], {
+                                textContent: "[Reload required] Allow Schoology Plus to collect anonymous information about how you use the extension. We don't collect any personal information per our privacy policy."
+                            })
+                        ]) : noControl,
+                    ]),
+                ]),
+                createElement("div", ["settings-buttons-wrapper"], undefined, [
+                    createButton("save-settings", "Save Settings", () => window.splus.Setting.saveModified()),
+                    createElement("div", ["settings-actions-wrapper"], {}, [
+                        createElement("a", [], {
+                            textContent: "View Debug Info",
+                            onclick: () => window.splus.openModal("debug-modal"),
+                            href: "#"
+                        }),
+                        createElement("a", [], {
+                            textContent: "Export Settings",
+                            onclick: window.splus.Setting.export,
+                            href: "#"
+                        }),
+                        createElement("a", [], {
+                            textContent: "Import Settings",
+                            onclick: window.splus.Setting.import,
+                            href: "#"
+                        }),
+                        createElement("a", ["restore-defaults"], {
+                            textContent: "Restore Defaults",
+                            onclick: window.splus.Setting.restoreDefaults,
+                            href: "#"
+                        })
+                    ]),
+                ])
+            ]);
+
+            if (callback && typeof callback == "function") {
+                callback();
+            }
+        });
     }
 
     window.splus.Logger.debug("Finished loading settings.js");

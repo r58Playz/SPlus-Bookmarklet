@@ -20,7 +20,7 @@
         button.prepend(img);
         button.querySelector("input").style.paddingLeft = "4px";
         button.style.cursor = "pointer";
-        button.addEventListener("click", () => openModal("course-settings-modal", {
+        button.addEventListener("click", () => window.splus.openModal("course-settings-modal", {
             courseId: document.location.href.match(/\/(\d+)\//)[1],
             courseName: document.querySelector(".page-title").textContent
         }));
@@ -178,7 +178,7 @@
 
         (document.getElementById("request-course-icon-wrapper") || {}).outerHTML = "";
 
-        if (isLAUSD()) {
+        if (window.splus.isLAUSD()) {
             let iconExists = Theme.hasBuiltInIcon(options.courseName);
             modal.element.querySelector(".splus-modal-contents").appendChild(
                 createElement("div", ["setting-entry"], {

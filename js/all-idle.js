@@ -418,7 +418,7 @@
     function parseSettingsHash() {
         let hashes = location.hash.split('#');
         if (hashes.length > 1 && hashes[1] === "splus-settings") {
-            openModal("settings-modal");
+            window.splus.openModal("settings-modal");
             if (hashes.length > 2) {
                 setTimeout(() => {
                     location.hash = hashes[2];
@@ -443,4 +443,5 @@
     });
 
     window.splus.Logger.debug("Finished loading all-idle.js");
+    window.splusLoaded.add("all-idle");
 })();

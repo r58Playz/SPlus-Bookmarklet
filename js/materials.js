@@ -119,7 +119,7 @@
             // blank because null becomes "null" in the dataset, which is truthy; blank is falsey
             let documentUrlFromApi = "";
             let materialId = value.id.match(/\d+/)[0];
-            let documentInfoFromApi = await fetchApiJson(`/sections/${classId}/documents/${materialId}`);
+            let documentInfoFromApi = await window.splus.fetchApiJson(`/sections/${classId}/documents/${materialId}`);
 
             if (!documentInfoFromApi.attachments.files || !documentInfoFromApi.attachments.files.file[0]) {
                 // dynamic nonfile (probably link) element
@@ -312,7 +312,7 @@
 
         // this object contains ALL grades from this Schoology account, "keyed" by annoying IDs
         // they're filtered to this section though
-        let myGrades = await fetchApiJson(`/users/${userId}/grades?section_id=${classId}`);
+        let myGrades = await window.splus.fetchApiJson(`/users/${userId}/grades?section_id=${classId}`);
 
         let thisClassGrades = myGrades.section[0];
 
@@ -351,7 +351,7 @@
 
         // assignments
         // need a separate API call
-        let ourAssignments = await fetchApiJson(`/sections/${classId}/assignments`);
+        let ourAssignments = await window.splus.fetchApiJson(`/sections/${classId}/assignments`);
 
         // for some reason (TODO why) that call doesn't always return everything
         // since we only use the assignments collection here (internally), no need to add the entire remainder off of grades
@@ -387,7 +387,7 @@
             if (+assignment.allow_dropbox && (!gradeInfo || gradeInfo.grade === null || gradeInfo.exception)) {
                 // "dropboxes," or places to submit documents via Schoology
                 // another API call
-                loadedGradeContainer.dropboxes[assignment.id] = (await fetchApiJson(`/sections/${classId}/submissions/${assignment.id}/${userId}`)).revision;
+                loadedGradeContainer.dropboxes[assignment.id] = (await window.splus.fetchApiJson(`/sections/${classId}/submissions/${assignment.id}/${userId}`)).revision;
                 Object.freeze(loadedGradeContainer.dropboxes[assignment.id]);
             }
         }
@@ -397,7 +397,7 @@
 
         // grade drops
         // unfortunately it doesn't look like the API returns grade drop status, so we have to scrape it from the gradebook
-        let ourGradebookHtml = await (await fetch(`https://${Setting.getValue("defaultDomain")}/course/${classId}/student_grades`)).text();
+        let ourGradebookHtml = await (await fetch(`https://${window.splus.Setting.getValue("defaultDomain")}/course/${classId}/student_grades`)).text();
         let ourGradebookParser = new DOMParser();
         let ourGradebookDoc = ourGradebookParser.parseFromString(ourGradebookHtml, "text/html");
 
@@ -425,4 +425,5 @@
     });
 
     window.splus.Logger.debug("Finished loading materials.js");
+    window.splusLoaded.add("materials");
 })();

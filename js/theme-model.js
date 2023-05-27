@@ -385,4 +385,6 @@
             throw new Error(`Invalid theme object provided. Make sure the provided JSON is a valid version ${SchoologyTheme.CURRENT_VERSION} theme.`);
         }
     }
+    window.splus.Logger.debug("Finished loading theme-model.js");
+    window.splusLoaded.add("theme-model");
 })();

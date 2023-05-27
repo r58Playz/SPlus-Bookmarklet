@@ -1,5 +1,5 @@
 // IMPORTANT!!!! SET THIS TO WHERE YOU ARE HOSTING THIS!!!!!
-let SPlusStubs_hosting_url = /*'https://splus.r58playz.dev/'*/ 'http://localhost:8000/';
+let SPlusStubs_hosting_url = window.sPlusBookmarkletSourcePath;
 
 // non-extension impl of chrome.storage and chrome.runtime
 const c_storage = {}
@@ -37,9 +37,10 @@ const c_s_sync = {
     set(toSet, callback) {
         console.debug("ExtAPIStubs: Redirected chrome.storage.sync.set");
         for (const [key, value] of Object.entries(toSet)) {
-            console.debug("ExtAPIStubs: setting key " + key + "to value: " + value);
+            console.debug("ExtAPIStubs: setting key " + key + " to value: " + value);
             SPLUS_EXT_API_localStorage.setItem(key, JSON.stringify(value));
         }
+        callback();
     },
     remove(toSet, callback) {
         console.debug("ExtAPIStubs: Redirected chrome.storage.sync.remove");
@@ -50,6 +51,7 @@ const c_s_sync = {
                 SPLUS_EXT_API_localStorage.removeItem(toRemove);
             }
         }
+        callback();
     }
 }
 // SET YOUR MANIFEST DATA HERE!

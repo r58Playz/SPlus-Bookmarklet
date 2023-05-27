@@ -426,4 +426,6 @@
         url: "https://cdn-icons-png.flaticon.com/512/164/164949.png",
         source: "bookshelf_164949"
     }];
+    window.splus.Logger.debug("Finished loading icons.js");
+    window.splusLoaded.add("icons");
 })();

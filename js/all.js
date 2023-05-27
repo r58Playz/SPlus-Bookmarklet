@@ -910,7 +910,7 @@
 
     function openOptionsMenu(settingsModal) {
         settingsModal.body.innerHTML = "";
-        updateSettings(() => {
+        window.splus.updateSettings(() => {
             settingsModal.body.appendChild(window.splus.getModalContents());
             settingsModal.element.querySelector("#open-changelog").addEventListener("click", () => window.splus.openModal("changelog-modal"), {
                 once: true

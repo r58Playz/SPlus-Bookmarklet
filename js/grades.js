@@ -39,7 +39,7 @@
                         legacyAction: "click",
                         legacyLabel: "Grades Context Menu"
                     });
-                    openModal("course-settings-modal", {
+                    window.splus.openModal("course-settings-modal", {
                         courseId: this[0].parentElement.id.match(/\d+/)[0],
                         courseName: this[0].querySelector("a span:nth-child(3)") ? this[0].querySelector("a span:nth-child(2)").textContent : this[0].innerText.split('\n')[0]
                     });
@@ -55,7 +55,7 @@
                         legacyAction: "click",
                         legacyLabel: "Grades Context Menu"
                     });
-                    openModal("course-settings-modal", {
+                    window.splus.openModal("course-settings-modal", {
                         courseId: this[0].parentElement.id.match(/\d+/)[0],
                         courseName: this[0].querySelector("a span:nth-child(3)") ? this[0].querySelector("a span:nth-child(2)").textContent : this[0].innerText.split('\n')[0]
                     });
@@ -1082,7 +1082,7 @@
                                         legacyAction: "change-boundaries",
                                         legacyLabel: "What-If Grades"
                                     });
-                                    openModal("course-settings-modal", {
+                                    window.splus.openModal("course-settings-modal", {
                                         courseId: courseElem.id.match(/\d+/)[0],
                                         courseName: titleElem.querySelector("a span:nth-child(3)") ? titleElem.querySelector("a span:nth-child(2)").textContent : titleElem.innerText.split('\n')[0]
                                     });
@@ -1903,4 +1903,5 @@
     }
 
     window.splus.Logger.debug("Finished loading grades.js");
+    window.splusLoaded.add("grades");
 })();

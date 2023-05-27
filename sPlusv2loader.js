@@ -1,11 +1,13 @@
 (async function () {
+    if(window.splusLoaded) return;
     if (window.location.pathname.includes("sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage") ||
         window.location.pathname.includes("ReaderControl.html") ||
         window.location.pathname.includes("session-tracker.html")
     ) return;
     // +++++++++++++++++++++++++++++++++++++++++++++ CONFIG +++++++++++++++++++++++++++++++++++++++++++++++++
     // Where this script is hosted. used to properly inject extension's files
-    var SPLUSbase_url = /*'https://splus.r58playz.dev/' */ 'http://localhost:8000/';
+    var SPLUSbase_url = document.currentScript.src;
+    window.sPlusBookmarkletSourcePath = SPLUSbase_url;
     // Where extension API stubs are defined
     var SPLUSext_apis_file = "js/extension-apis.js"
     

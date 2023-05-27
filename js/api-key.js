@@ -197,4 +197,7 @@
             }
         }),
     ]));
+
+    window.splus.Logger.debug("Finished loading api-key.js");
+    window.splusLoaded.add("api-key");
 })();

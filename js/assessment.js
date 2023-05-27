@@ -86,4 +86,5 @@
     });
 
     Logger.debug("Finished loading assessment.js");
+    window.splusLoaded.add("assessment");
 })();

@@ -27,7 +27,7 @@
             page.appendChild(outerContainer);
             populateCourseList(inCommonID, loadCommonCourses);
         } catch (err) {
-            Logger.error(err);
+            window.splus.Logger.error(err);
         }
     })();
 
@@ -53,15 +53,15 @@
 
     async function getCoursesInCommon(otherUserId) {
         let coursesInCommon = [];
-        let myClasses = (await fetchApiJson(`/users/${getUserId()}/sections`)).section;
+        let myClasses = (await window.splus.fetchApiJson(`/users/${window.splus.getUserId()}/sections`)).section;
         for (let section of myClasses) {
             try {
-                await processEnrollment(await fetchApiJson(`/sections/${section.id}/enrollments`), section, coursesInCommon, otherUserId);
+                await processEnrollment(await window.splus.fetchApiJson(`/sections/${section.id}/enrollments`), section, coursesInCommon, otherUserId);
             } catch (err) {
-                Logger.warn(`Error checking enrollments for section ${section.id}`, err);
+                window.splus.Logger.warn(`Error checking enrollments for section ${section.id}`, err);
             }
         }
-        Logger.log("Finished processing enrollments");
+        window.splus.Logger.log("Finished processing enrollments");
 
         return coursesInCommon;
     }
@@ -75,7 +75,7 @@
         loadCourseFunction.then(coursesInCommon => {
                 clearNodeChildren(listElem);
 
-                let aliases = Setting.getValue("courseAliases") || {};
+                let aliases = window.splus.Setting.getValue("courseAliases") || {};
 
                 if (coursesInCommon.length == 0) {
                     listElem.appendChild(createElement("li", [], {
@@ -89,16 +89,16 @@
                                 alt: `Profile picture for ${section.course_title}: ${section.section_title}`
                             }),
                             createElement("a", [], {
-                                href: `https://${Setting.getValue("defaultDomain")}/course/${section.id}`,
+                                href: `https://${window.splus.Setting.getValue("defaultDomain")}/course/${section.id}`,
                                 textContent: aliases[section.id] || `${section.course_title}: ${section.section_title}`
                             })
                         ]));
                     }
                 }
-                Theme.setProfilePictures(listElem.getElementsByTagName("img"));
+                window.splus.Theme.setProfilePictures(listElem.getElementsByTagName("img"));
             })
             .catch(err => {
-                Logger.error("Error building courses in common: ", err);
+                window.splus.Logger.error("Error building courses in common: ", err);
                 let listElem = document.getElementById(targetListElem);
                 clearNodeChildren(listElem);
                 listElem.appendChild(createElement("li", [], {
@@ -106,5 +106,6 @@
                 }));
             });
     }
-
+    window.splus.Logger.debug("Finished loading user.js");
+    window.splusLoaded.add("user");
 })();

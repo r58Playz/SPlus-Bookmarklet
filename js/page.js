@@ -38,5 +38,6 @@
         return link.href;
     }
 
-    Logger.debug("Finished loading page.js");
+    window.splus.Logger.debug("Finished loading page.js");
+    window.splusLoaded.add("page");
 })();
