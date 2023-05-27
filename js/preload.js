@@ -166,7 +166,7 @@
      * @param {string} path The API path, e.g. "/sections/12345/assignments/12"
      */
     window.splus.fetchApi = function(path) {
-        return fetchWithApiAuthentication(`https://sch-proxy.r58playz.ml/api/v1?apiAddress=${path}`);
+        return fetchWithApiAuthentication(`https://sch-proxy.r58playz.dev/api/v1?apiAddress=${path}`);
     }
 
     /**

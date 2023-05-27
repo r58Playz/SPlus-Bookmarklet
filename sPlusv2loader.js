@@ -4,9 +4,8 @@
         window.location.pathname.includes("ReaderControl.html") ||
         window.location.pathname.includes("session-tracker.html")
     ) return;
-    // +++++++++++++++++++++++++++++++++++++++++++++ CONFIG +++++++++++++++++++++++++++++++++++++++++++++++++
-    // Where this script is hosted. used to properly inject extension's files
-    var SPLUSbase_url = document.currentScript.src;
+    var scriptUrl = new URL(document.currentScript.src);
+    var SPLUSbase_url = scriptUrl.origin + '/';
     window.sPlusBookmarkletSourcePath = SPLUSbase_url;
     // Where extension API stubs are defined
     var SPLUSext_apis_file = "js/extension-apis.js"
