@@ -31,6 +31,7 @@
             return o ? new CustomColorDefinition(o.primary, o.hover, o.background, o.border, o.link || o.hover) : undefined;
         }
     }
+    window.splus.CustomColorDefinition = CustomColorDefinition;
 
     class RainbowColorComponentAnimation {
         /**
@@ -58,6 +59,7 @@
             return o ? new RainbowColorComponentAnimation(o.speed, o.offset, o.min, o.max, o.alternate) : undefined;
         }
     }
+    window.splus.RainbowColorComponentAnimation = RainbowColorComponentAnimation;
 
     class RainbowColorComponentDefinition {
         /**
@@ -79,6 +81,7 @@
             return o ? new RainbowColorComponentDefinition(RainbowColorComponentAnimation.loadFromObject(o.animate), o.value) : undefined;
         }
     }
+    window.splus.RainbowColorComponentDefinition = RainbowColorComponentDefinition;
 
     class RainbowColorDefinition {
         /**
@@ -108,6 +111,7 @@
                 undefined;
         }
     }
+    window.splus.RainbowColorDefinition = RainbowColorDefinition;
 
     class ModernInterfaceColorDefinition {
         /**
@@ -155,6 +159,7 @@
                 undefined;
         }
     }
+    window.splus.ModernInterfaceColorDefinition = ModernInterfaceColorDefinition;
 
     class ModernTextColorDefinition {
         /**
@@ -184,6 +189,7 @@
                 undefined;
         }
     }
+    window.splus.ModernTextColorDefinition = ModernTextColorDefinition;
 
     class ModernOptionsDefinition {
         /**
@@ -213,6 +219,7 @@
                 undefined;
         }
     }
+    window.splus.ModernOptionsDefinition = ModernOptionsDefinition;
 
     class ModernColorDefinition {
         /**
@@ -248,6 +255,7 @@
                 undefined;
         }
     }
+    window.splus.ModernColorDefinition = ModernColorDefinition;
 
     class ThemeColor {
         /**
@@ -273,6 +281,7 @@
             return o ? new ThemeColor(o.hue, CustomColorDefinition.loadFromObject(o.custom), RainbowColorDefinition.loadFromObject(o.rainbow), ModernColorDefinition.loadFromObject(o.modern)) : new ThemeColor(210);
         }
     }
+    window.splus.ThemeColor = ThemeColor;
 
     class ThemeLogo {
         /**
@@ -294,6 +303,7 @@
             return o ? new ThemeLogo(o.url, o.preset) : new ThemeLogo(undefined, "schoology_plus");
         }
     }
+    window.splus.ThemeLogo = ThemeLogo;
 
     class ThemeCursor {
         /**
@@ -313,6 +323,7 @@
             return o ? new ThemeCursor(o.primary) : undefined;
         }
     }
+    window.splus.ThemeCursor = ThemeCursor;
 
     class ThemeIcon {
         /**
@@ -334,6 +345,7 @@
             return array ? array.map(x => new ThemeIcon(x.regex, x.url)) : undefined;
         }
     }
+    window.splus.ThemeIcon = ThemeIcon;
 
     class SchoologyTheme {
         /**
@@ -385,6 +397,8 @@
             throw new Error(`Invalid theme object provided. Make sure the provided JSON is a valid version ${SchoologyTheme.CURRENT_VERSION} theme.`);
         }
     }
+    window.splus.SchoologyTheme = SchoologyTheme;
+
     window.splus.Logger.debug("Finished loading theme-model.js");
     window.splusLoaded.add("theme-model");
 })();

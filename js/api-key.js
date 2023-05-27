@@ -20,21 +20,11 @@
             trackEvent("Change Access", "allowed", "API Key");
             console.log("API secret revealed.")
 
-            window.splus.Setting.setValue("apikey", key, () => {
-                alert('Saved apikey.')
-            });
-            window.splus.Setting.setValue("apisecret", secret, () => {
-                alert('Saved apisecret.')
-            });
+            window.splus.Setting.setValue("apikey", key);
+            window.splus.Setting.setValue("apisecret", secret);
             window.splus.Setting.setValue("apiuser", window.splus.getUserId());
-            window.splus.Setting.setValue("apistatus", "allowed", () => {
-                alert('Set apistatus to allowed.')
-            });
-            try {
-                await window.splus.getApiKeysDirect();
-            } catch (err) {
-                alert("Failed to get API keys. You may have saved them but Schoology Plus cannot find them.")
-            }
+            window.splus.Setting.setValue("apistatus", "allowed");
+            location.href = "/";
         }
     }
 

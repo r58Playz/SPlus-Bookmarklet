@@ -228,7 +228,7 @@
         }
 
         static byName(name) {
-            return themes.find(x => x.name == name) || Theme.byName("Schoology Plus");
+            return window.splus.themes.find(x => x.name == name) || Theme.byName("Schoology Plus");
         }
 
         static setBackgroundColor(primaryColor, backgroundColor, hoverColor, borderColor, linkColor = hoverColor) {
@@ -461,14 +461,14 @@
                 }
             }
 
-            if (window.splus.isLAUSD() && !shownMissingIconsNotification && coursesMissingDefaultIcons.size > 0 && showToast) {
+            if (window.splus.isLAUSD() && !shownMissingIconsNotification && coursesMissingDefaultIcons.size > 0 && window.splus.showToast) {
                 let coursesString = encodeURI(Array.from(coursesMissingDefaultIcons).join("\n").replace("&", "{amp;}"));
-                showToast("Request New Course Icons?",
+                window.splus.showToast("Request New Course Icons?",
                     `${coursesMissingDefaultIcons.size} ${coursesMissingDefaultIcons.size == 1 ? "course is missing a Schoology Plus course icon. Would you like to request that an icon be added for this course?" : "courses are missing Schoology Plus course icons. Would you like to request that icons be added for these courses?"}`,
                     "yellow", {
                         buttons: [
-                            createToastButton("Yes", "suggest-icons-button", () => window.open(`${ICON_REQUEST_URL}${coursesString}`, "_blank")),
-                            createToastButton("No", "nothing-button", () => showToast("You can request icons later from course options", "", "hsl(190, 100%, 50%)", {
+                            window.splus.createToastButton("Yes", "suggest-icons-button", () => window.open(`${ICON_REQUEST_URL}${coursesString}`, "_blank")),
+                            window.splus.createToastButton("No", "nothing-button", () => window.splus.showToast("You can request icons later from course options", "", "hsl(190, 100%, 50%)", {
                                 timeout: 5000
                             })),
                         ]
@@ -501,9 +501,9 @@
 
     let tempTheme = undefined;
 
-    let themes = [];
+    window.splus.themes = [];
     for (let t of window.splus.__defaultThemes) {
-        themes.push(Theme.loadFromObject(t));
+        window.splus.themes.push(Theme.loadFromObject(t));
     }
 
     setInterval(() => {

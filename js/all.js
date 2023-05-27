@@ -10,12 +10,12 @@
     if (localStorage["splus-temp-generatedtheme"]) {
         localStorage.removeItem("splus-temp-generatedtheme");
 
-        showToast(
+        window.splus.showToast(
             "Theme Generated",
             "Schoology Plus created a theme that matches your school's theme",
             "rgb(0,255,0)", {
                 buttons: [
-                    createToastButton("View Themes", "view-themes-button", () => location.href = chrome.runtime.getURL("/theme-editor.html"))
+                    window.splus.createToastButton("View Themes", "view-themes-button", () => location.href = "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage")
                 ]
             }
         );
@@ -680,33 +680,8 @@
             ]),
             window.splus.modalFooterText,
             (modal, x) => document.getElementById("debug-modal-content").textContent = generateDebugInfo()
-        ),
-        new window.splus.Modal(
-            "theme-editor-modal",
-            "Schoology Plus Theme Editor",
-            createElement("div", ["splus-modal-contents"], {}, [
-                createElement("iframe", [], {
-                    src: "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage",
-                    id: "splus-trick-user-theme-editor-iframe"
-                })
-            ]),
-            window.splus.modalFooterText
         )
     ];
-
-    function reloadThemeEditor() {
-        (async function() {
-            var themeEditorResponse = await fetch(chrome.runtime.getURL("theme-editor.html"));
-            var themeEditorSource = await themeEditorResponse.text();
-            var iframeInject = document.getElementById("splus-trick-user-theme-editor-iframe");
-            iframeInject.contentWindow.location.reload(true);
-            var doc = iframeInject.contentWindow.document;
-            doc.open();
-            doc.write(themeEditorSource);
-            doc.close();
-        })();
-    }
-    reloadThemeEditor();
 
     // Run when new version installed
     let newVersion = window.splus.Setting.getValue("newVersion");
@@ -921,7 +896,7 @@
             window.splus.Setting.onShown();
             $(".splus-settings-tabs").tabs({
                 active: 0,
-                heightStyle: "fill"
+                heightStyle: "panel"
             });
         });
     }

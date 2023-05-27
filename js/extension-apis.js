@@ -32,7 +32,7 @@ const c_s_sync = {
                 }
             }
         }
-        callback(archive);
+        if(callback) callback(archive);
     },
     set(toSet, callback) {
         console.debug("ExtAPIStubs: Redirected chrome.storage.sync.set");
@@ -40,7 +40,7 @@ const c_s_sync = {
             console.debug("ExtAPIStubs: setting key " + key + " to value: " + value);
             SPLUS_EXT_API_localStorage.setItem(key, JSON.stringify(value));
         }
-        callback();
+        if(callback) callback();
     },
     remove(toSet, callback) {
         console.debug("ExtAPIStubs: Redirected chrome.storage.sync.remove");
@@ -51,7 +51,7 @@ const c_s_sync = {
                 SPLUS_EXT_API_localStorage.removeItem(toRemove);
             }
         }
-        callback();
+        if(callback) callback();
     }
 }
 // SET YOUR MANIFEST DATA HERE!

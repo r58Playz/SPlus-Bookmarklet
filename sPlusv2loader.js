@@ -1,35 +1,37 @@
 (async function () {
     if(window.splusLoaded) return;
-    if (window.location.pathname.includes("sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage") ||
-        window.location.pathname.includes("ReaderControl.html") ||
+    if (window.location.pathname.includes("ReaderControl.html") ||
         window.location.pathname.includes("session-tracker.html")
     ) return;
     var scriptUrl = new URL(document.currentScript.src);
-    var SPLUSbase_url = scriptUrl.origin + '/';
-    window.sPlusBookmarkletSourcePath = SPLUSbase_url;
+    var base_url = scriptUrl.origin + '/';
+    window.sPlusBookmarkletSourcePath = base_url;
     // Where extension API stubs are defined
-    var SPLUSext_apis_file = "js/extension-apis.js"
+    var ext_apis_file = "js/extension-apis.js"
     
     // skid detection code used to be here but eh anyone can use it now
-    
-    var notifdiv = document.createElement('div');
-    notifdiv.style.setProperty("z-index", "99999");
-    notifdiv.style.setProperty("position", "fixed");
-    notifdiv.style.setProperty("bottom", "0.5em");
-    notifdiv.style.setProperty("right", "1em");
-    notifdiv.style.setProperty("background-color", "#ffffff");
-    notifdiv.style.setProperty("color", "#000000");
-    notifdiv.style.setProperty("transform", "translate(0%, -100%);");
-    notifdiv.innerHTML = "Loading Schoology Plus...";
-    notifdiv.id = "SPLUS_NOTIF_DIV";
-    document.body.appendChild(notifdiv);
+    function setupNotifDiv() {
+        var notifdiv = document.createElement('div');
+        notifdiv.style.setProperty("z-index", "99999");
+        notifdiv.style.setProperty("position", "fixed");
+        notifdiv.style.setProperty("bottom", "0.5em");
+        notifdiv.style.setProperty("right", "1em");
+        notifdiv.style.setProperty("background-color", "#ffffff");
+        notifdiv.style.setProperty("color", "#000000");
+        notifdiv.style.setProperty("transform", "translate(0%, -100%);");
+        notifdiv.innerHTML = "Loading Schoology Plus...";
+        notifdiv.id = "SPLUS_NOTIF_DIV";
+        document.body.appendChild(notifdiv);
+        return notifdiv;
+    }
+    var notifdiv = setupNotifDiv();
     var cLog = console.log.bind(window.console, "%c+", lp());
     var cDebug = console.debug.bind(window.console, "%c+", lp());
     function lp() {
         return `color:#FFA500;border:1px solid #2A2A2A;border-radius:100%;font-size:14px;font-weight:bold;padding: 0 4px 0 4px;background-color:#2A2A2A`;
     }
 
-    function SPLUSglob(pattern, input) {
+    function glob(pattern, input) {
         var re = new RegExp(pattern.replace(/([.?+^$[\]\\(){}|\/-])/g, "\\$1").replace(/\*/g, '.*'));
         return re.test(input);
     }
@@ -40,15 +42,15 @@
     }
 
 
-    var SPLUScontent_scripts = [
+    var content_scripts = [
         {
             "matches": [
-                "https://lms.lausd.net/*",
-                "https://*.schoology.com/*"
+                "*://lms.lausd.net/*",
+                "*://*.schoology.com/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -60,7 +62,9 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://support.schoology.com/*",
+                "*://*.schoology.com/sPlusBookmarklet*",
+                "*://lms.lausd.net/sPlusBookmarklet*",
             ],
             "css": [
                 "css/all.css",
@@ -78,12 +82,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/*",
-                "https://*.schoology.com/*"
+                "*://lms.lausd.net/*",
+                "*://*.schoology.com/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -95,14 +99,18 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://support.schoology.com/*",
+                "*://*.schoology.com/sPlusBookmarklet*",
+                "*://lms.lausd.net/sPlusBookmarklet*",
             ],
             "css": [
                 "lib/css/contextmenu.css",
-                "lib/css/iziToast.min.css"
+                "lib/css/iziToast.min.css",
+                "lib/css/jquery-ui.min.css"
             ],
             "js": [
                 "lib/js/jquery-3.3.1.min.js",
+                "lib/js/jquery-ui.min.js",
                 "lib/js/contextmenu.js",
                 "lib/js/iziToast.min.js",
                 "js/version-specific.js",
@@ -113,14 +121,14 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/grades/grades*",
-                "https://lms.lausd.net/course/*/student_grades",
-                "https://*.schoology.com/grades/grades*",
-                "https://*.schoology.com/course/*/student_grades"
+                "*://lms.lausd.net/grades/grades*",
+                "*://lms.lausd.net/course/*/student_grades",
+                "*://*.schoology.com/grades/grades*",
+                "*://*.schoology.com/course/*/student_grades"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -145,12 +153,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/course/*/materials*",
-                "https://*.schoology.com/course/*/materials*"
+                "*://lms.lausd.net/course/*/materials*",
+                "*://*.schoology.com/course/*/materials*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -178,20 +186,20 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/",
-                "https://lms.lausd.net/home",
-                "https://lms.lausd.net/home#*",
-                "https://lms.lausd.net/home/recent-activity*",
-                "https://lms.lausd.net/home/course-dashboard*",
-                "https://*.schoology.com/",
-                "https://*.schoology.com/home",
-                "https://*.schoology.com/home#*",
-                "https://*.schoology.com/home/recent-activity*",
-                "https://*.schoology.com/home/course-dashboard*"
+                "*://lms.lausd.net/",
+                "*://lms.lausd.net/home",
+                "*://lms.lausd.net/home#*",
+                "*://lms.lausd.net/home/recent-activity*",
+                "*://lms.lausd.net/home/course-dashboard*",
+                "*://*.schoology.com/",
+                "*://*.schoology.com/home",
+                "*://*.schoology.com/home#*",
+                "*://*.schoology.com/home/recent-activity*",
+                "*://*.schoology.com/home/course-dashboard*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -203,7 +211,9 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://support.schoology.com/*",
+                "*://*.schoology.com/sPlusBookmarklet*",
+                "*://lms.lausd.net/sPlusBookmarklet*",
             ],
             "js": [
                 "js/course.js",
@@ -213,8 +223,8 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/course/*",
-                "https://*.schoology.com/course/*"
+                "*://lms.lausd.net/course/*",
+                "*://*.schoology.com/course/*"
             ],
             "js": [
                 "js/course.js"
@@ -223,10 +233,10 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/api",
-                "https://lms.lausd.net/api/*",
-                "https://*.schoology.com/api",
-                "https://*.schoology.com/api/*"
+                "*://lms.lausd.net/api",
+                "*://lms.lausd.net/api/*",
+                "*://*.schoology.com/api",
+                "*://*.schoology.com/api/*"
             ],
             "js": [
                 "js/api-key.js"
@@ -235,12 +245,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/user/*",
-                "https://*.schoology.com/user/*"
+                "*://lms.lausd.net/user/*",
+                "*://*.schoology.com/user/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -264,12 +274,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/assignment/*/assessment",
-                "https://*.schoology.com/assignment/*/assessment"
+                "*://lms.lausd.net/assignment/*/assessment",
+                "*://*.schoology.com/assignment/*/assessment"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -290,12 +300,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/page/*",
-                "https://*.schoology.com/page/*"
+                "*://lms.lausd.net/page/*",
+                "*://*.schoology.com/page/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -316,14 +326,14 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/courses*",
-                "https://lms.lausd.net/courses/*",
-                "https://*.schoology.com/courses*",
-                "https://*.schoology.com/courses/*"
+                "*://lms.lausd.net/courses*",
+                "*://lms.lausd.net/courses/*",
+                "*://*.schoology.com/courses*",
+                "*://*.schoology.com/courses/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -345,12 +355,12 @@
         },
         {
             "matches": [
-                "https://lms.lausd.net/*",
-                "https://*.schoology.com/*"
+                "*://lms.lausd.net/*",
+                "*://*.schoology.com/*"
             ],
             "exclude_matches": [
-                "https://*.schoology.com/login*",
-                "https://*.schoology.com/register*",
+                "*://*.schoology.com/login*",
+                "*://*.schoology.com/register*",
                 "*://asset-cdn.schoology.com/*",
                 "*://developer.schoology.com/*",
                 "*://support.schoology.com/*",
@@ -362,101 +372,145 @@
                 "*://api.schoology.com/*",
                 "*://developers.schoology.com/*",
                 "*://schoology.com/*",
-                "*://support.schoology.com/*"
+                "*://support.schoology.com/*",
+                "*://*.schoology.com/sPlusBookmarklet*",
+                "*://lms.lausd.net/sPlusBookmarklet*",
             ],
             "js": [
                 "js/all-idle.js"
             ],
             "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "*://*.schoology.com/sPlusBookmarklet*",
+                "*://lms.lausd.net/sPlusBookmarklet*",
+            ],
+            "js": [
+                "lib/js/jquery-3.3.1.min.js",
+                "lib/js/spectrum.js",
+                "lib/js/materialize.min.js",
+                "lib/js/jquery-ui.min.js",
+                "lib/js/roundslider.min.js",
+                "js/loader.js",
+                "js/settings.js",
+                "js/icons.js",
+                "js/theme-model.js",
+                "js/default-themes.js",
+                "js/theme-editor.js"
+            ],
+            "css": [
+                "lib/css/material-icons.css",
+                "lib/css/materialize.min.css",
+                "lib/css/jquery-ui.min.css",
+                "lib/css/spectrum.css",
+                "lib/css/roundslider.min.css",
+                "css/theme-editor.css",
+                "css/modern/theme-editor.css"
+            ],
+            "injectHtml": "theme-editor.html"
         }
     ];
     // ext apis
-    var SPLUSextApijsUrl = SPLUSbase_url + SPLUSext_apis_file;
+    var extApijsUrl = base_url + ext_apis_file;
     // inject
-    var SPLUSextApiscriptTag = document.createElement('script');
+    var extApiscriptTag = document.createElement('script');
     logInjectStatus("Downloading extension apis");
-    var SPLUSextApifetchResponse = await fetch(SPLUSextApijsUrl);
-    SPLUSextApifetchText = await SPLUSextApifetchResponse.text();
-    SPLUSextApiscriptTag.innerHTML = SPLUSextApifetchText;
-    document.querySelector('head').appendChild(SPLUSextApiscriptTag);
+    var extApifetchResponse = await fetch(extApijsUrl);
+    extApifetchText = await extApifetchResponse.text();
+    extApiscriptTag.innerHTML = extApifetchText;
+    document.querySelector('head').appendChild(extApiscriptTag);
     logInjectStatus("Injected extension apis");
 
-    var SPLUSscripts_injected = [];
+    var scripts_injected = [];
 
-    for (const SPLUScontent_script of SPLUScontent_scripts) {
+    for (const content_script of content_scripts) {
         // matches
-        let SPLUSmatches = SPLUScontent_script.matches;
-        if (SPLUSmatches == undefined) {
+        let matches = content_script.matches;
+        if (matches == undefined) {
             alert("Malformed content script.");
             continue;
         }
         // exclude_matches
-        let SPLUSexclude_matches = SPLUScontent_script.exclude_matches;
-        var SPLUScurrentAddress = window.location.href;
-        if (typeof SPLUSloaderAddressOverride != 'undefined') {
-            SPLUScurrentAddress = SPLUSloaderAddressOverride;
+        let exclude_matches = content_script.exclude_matches;
+        var currentAddress = window.location.href;
+        if (typeof loaderAddressOverride != 'undefined') {
+            currentAddress = loaderAddressOverride;
         }
-        let SPLUScurrentAddressMatches = false;
-        let SPLUScurrentAddressIsExcluded = false;
+        let currentAddressMatches = false;
+        let currentAddressIsExcluded = false;
         // check matches
-        for (const SPLUSaddress of SPLUSmatches) {
-            let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-            cDebug("current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "matches" : "does not match") + " the glob " + SPLUSaddress);
-            if (!SPLUScurrentAddressMatches) {
-                SPLUScurrentAddressMatches = SPLUSaddressMatches;
+        for (const address of matches) {
+            let addressMatches = glob(address, currentAddress);
+            cDebug("current address: '" + currentAddress + "' matches: " + addressMatches + " glob: " + address);
+            if (!currentAddressMatches) {
+                currentAddressMatches = addressMatches;
             }
         }
-        if (SPLUSexclude_matches != undefined) {
-            for (const SPLUSaddress of SPLUSexclude_matches) {
-                let SPLUSaddressMatches = SPLUSglob(SPLUSaddress, SPLUScurrentAddress);
-                cDebug("current address (" + SPLUScurrentAddress + ") " + (SPLUSaddressMatches ? "is excluded by" : "is not excluded by") + " the glob " + SPLUSaddress);
-                if (!SPLUScurrentAddressIsExcluded) {
-                    SPLUScurrentAddressIsExcluded = SPLUSaddressMatches;
+        if (exclude_matches != undefined) {
+            for (const address of exclude_matches) {
+                let addressMatches = glob(address, currentAddress);
+                cDebug("current address: '" + currentAddress + "' excludes: " + addressMatches + " glob: "  + address);
+                if (!currentAddressIsExcluded) {
+                    currentAddressIsExcluded = addressMatches;
                 }
             }
         }
-        if (!SPLUScurrentAddressMatches || SPLUScurrentAddressIsExcluded) {
-            cDebug("current address matches: " + SPLUScurrentAddressMatches + " is excluded: " + SPLUScurrentAddressIsExcluded);
+        if (!currentAddressMatches || currentAddressIsExcluded) {
+            cDebug("current address matches: " + currentAddressMatches + " is excluded: " + currentAddressIsExcluded);
             continue;
         }
+        // replace html
+        let htmlFile = content_script.injectHtml;
+        if (htmlFile != undefined) {
+            var htmlUrl = base_url + htmlFile;
+            cDebug("downloading file at " + htmlUrl);
+            notifdiv.innerHTML = "DLing " + htmlUrl;
+            var fetchResponse = await fetch(htmlUrl);
+            var fetchText = await fetchResponse.text();
+            document.write(fetchText);
+            cLog("Replaced HTML of page");
+            notifdiv = setupNotifDiv();
+            notifdiv.innerHTML = "Replaced content of page";
+        }
         // js
-        let SPLUSjsFiles = SPLUScontent_script.js;
-        if (SPLUSjsFiles != undefined) {
-            for (const SPLUSjsFile of SPLUSjsFiles) {
-                if (!SPLUSscripts_injected.includes(SPLUSjsFile)) {
-                    SPLUSscripts_injected.push(SPLUSjsFile);
-                    var SPLUSjsUrl = SPLUSbase_url + SPLUSjsFile;
+        let jsFiles = content_script.js;
+        if (jsFiles != undefined) {
+            for (const jsFile of jsFiles) {
+                if (!scripts_injected.includes(jsFile)) {
+                    scripts_injected.push(jsFile);
+                    var jsUrl = base_url + jsFile;
                     // inject
-                    var SPLUSscriptTag = document.createElement('script');
-                    cDebug("Downloading file at " + SPLUSjsUrl);
-                    notifdiv.innerHTML = "DLing " + SPLUSjsFile
-                    var SPLUSfetchResponse = await fetch(SPLUSjsUrl);
-                    SPLUSfetchText = await SPLUSfetchResponse.text();
-                    SPLUSscriptTag.innerHTML = SPLUSfetchText;
-                    document.querySelector('head').appendChild(SPLUSscriptTag);
-                    cLog("Injected file at " + SPLUSjsUrl);
-                    notifdiv.innerHTML = "Injected " + SPLUSjsFile
+                    var scriptTag = document.createElement('script');
+                    cDebug("Downloading file at " + jsUrl);
+                    notifdiv.innerHTML = "DLing " + jsFile
+                    var fetchResponse = await fetch(jsUrl);
+                    fetchText = await fetchResponse.text();
+                    scriptTag.innerHTML = fetchText;
+                    document.querySelector('head').appendChild(scriptTag);
+                    cLog("Injected file at " + jsUrl);
+                    notifdiv.innerHTML = "Injected " + jsFile
                 } else {
-                    cLog("Skipped file at " + SPLUSjsUrl + " because it is already loaded");
-                    notifdiv.innerHTML = "Skipped " + SPLUSjsFile
+                    cLog("Skipped file at " + jsUrl + " because it is already loaded");
+                    notifdiv.innerHTML = "Skipped " + jsFile
                 }
             }
         }
         // css
-        let SPLUScssFiles = SPLUScontent_script.css;
-        if (SPLUScssFiles != undefined) {
-            for (const SPLUScssFile of SPLUScssFiles) {
-                var SPLUScssUrl = SPLUSbase_url + SPLUScssFile
+        let cssFiles = content_script.css;
+        if (cssFiles != undefined) {
+            for (const cssFile of cssFiles) {
+                var cssUrl = base_url + cssFile
                 // inject
-                var SPLUSstyleTag = document.createElement('style');
-                cDebug("Downloading file at " + SPLUScssUrl);
-                notifdiv.innerHTML = "DLing " + SPLUScssFile
-                var SPLUSfetchResponse = await fetch(SPLUScssUrl);
-                SPLUSfetchText = await SPLUSfetchResponse.text();
-                SPLUSstyleTag.innerHTML = SPLUSfetchText;
-                document.querySelector('head').appendChild(SPLUSstyleTag);
-                cLog("Injected file at " + SPLUScssUrl);
-                notifdiv.innerHTML = "Injected " + SPLUScssFile
+                var styleTag = document.createElement('style');
+                cDebug("Downloading file at " + cssUrl);
+                notifdiv.innerHTML = "DLing " + cssFile
+                var fetchResponse = await fetch(cssUrl);
+                fetchText = await fetchResponse.text();
+                styleTag.innerHTML = fetchText;
+                document.querySelector('head').appendChild(styleTag);
+                cLog("Injected file at " + cssUrl);
+                notifdiv.innerHTML = "Injected " + cssFile
             }
         }
         notifdiv.innerHTML = "Loaded S+! bye bye";

@@ -41,15 +41,6 @@
 
     // Functions
 
-    /** @type {HTMLDivElement} */
-    var modalContents = undefined;
-
-    window.splus.getModalContents = () => {
-        return modalContents || createElement("p", [], {
-            textContent: "Error loading settings"
-        });
-    }
-
     function backgroundPageFetch(url, init, bodyReadType) {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
