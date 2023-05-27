@@ -1,5 +1,5 @@
 // IMPORTANT!!!! SET THIS TO WHERE YOU ARE HOSTING THIS!!!!!
-let SPlusStubs_hosting_url = /*'https://splus.r58playz.ml/'*/ 'http://localhost:8000/';
+let SPlusStubs_hosting_url = /*'https://splus.r58playz.dev/'*/ 'http://localhost:8000/';
 
 // non-extension impl of chrome.storage and chrome.runtime
 const c_storage = {}
