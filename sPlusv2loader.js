@@ -5,7 +5,7 @@
     ) return;
     // +++++++++++++++++++++++++++++++++++++++++++++ CONFIG +++++++++++++++++++++++++++++++++++++++++++++++++
     // Where this script is hosted. used to properly inject extension's files
-    var SPLUSbase_url = /*'https://splus.r58playz.ml/'*/ 'http://localhost:8000/';
+    var SPLUSbase_url = /*'https://splus.r58playz.dev/' */ 'http://localhost:8000/';
     // Where extension API stubs are defined
     var SPLUSext_apis_file = "js/extension-apis.js"
     
