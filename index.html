@@ -1,1 +1,54 @@
-<h1>Schoology Plus Bookmarklet</h1><br>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" \>
+  <meta name="og:title" content="Schoology Plus Bookmarklet" \>
+  <meta name="og:description" content="A port of Schoology Plus to the open web." \>
+  <meta name="description" content="A port of Schoology Plus to the open web." \>
+  <meta name="viewport" content="width=device-width" \>
+  <title>Schoology Plus Bookmarklet</title>
+  <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="center">Schoology Plus Bookmarklet</h1>
+    <p>
+      A port of Schoology Plus to the open web. Supports injection via uBlock Origin and bookmarklet. See
+      <a href="https://schoologypl.us">the actual Schoology Plus site</a> as well,
+      but don't ask for support there!
+    </p>
+    <p>
+      There are multiple install methods, uBlock Origin is recommended.
+    </p>
+    <h2 class="center" id="ublock-origin-method">uBlock Origin install method (recommended)</h2>
+    <p>
+    <ol>
+      <li>Open uBlock Origin settings.</li>
+      <li>Scroll down to Advanced.</li>
+      <li>Check the box "I am an advanced user"</li>
+      <li>Click on the settings next to "I am an advanced user"</li>
+      <li>In the opened tab, remove <pre>unset</pre> after <pre>userResourcesLocation</pre>. (If you have a URL in there
+        already, just add a space and append the URL in the next step)</li>
+      <li>Type in <pre>https://splus.r58playz.dev/ubo-resources</pre>.</li>
+      <li>Close the advanced settings tab.</li>
+      <li>Click on the "My filters" tab in uBlock Origin settings.</li>
+      <li>Add <pre>&lt;schoology_subdomain&gt;##+js(sPlus.js)</pre> to a new line.
+        Replace <pre>&lt;schoology_subdomain&gt;</pre> with your Schoology URL.</li>
+      <li>Make sure your Schoology domain has uBlock Origin enabled.</li>
+      <li>Schoology Plus should now load.</li>
+    </ol>
+    </p>
+    <h2 class="center" id="bookmarklet-method">Bookmarklet method</h2>
+    <p>
+      Drag this button to your bookmarks bar and then click it on Schoology. It will persist across navigations in
+      Schoology but not through reloads.
+    </p>
+    <a class="tile" id="bookmarklet" href='javascript:!function(e){var t=document,o=t.createElement("body"),r=t.createElement("iframe");r.onload=function(){var e=this.contentWindow,o=e.document;history.replaceState({},t.title=o.title,e.location.href),function(e,t){let o=["https://splus.r58playz.dev/sPlusv2loader.js"];for(const e of o){var r=e,n=r.match(/\s?module\s?/)?"module":"text/javascript";r=r.replace(/\s?module\s?/,"");var a=document.createElement("script");a.setAttribute("src",r),a.setAttribute("type",n),t.querySelector("head").appendChild(a)}}(0,o)},t.body.parentNode.replaceChild(o,t.body),o.parentNode.style.cssText=o.style.cssText=(r.style.cssText="width:100%;height:100%;margin:0;padding:0;border:0;")+"overflow:hidden;",o.appendChild(r).contentWindow.location.replace(t.URL)}();'>
+      <div>BOOKMARKLET</div>
+    </a>
+  </div>
+</body>
+
+</html>
