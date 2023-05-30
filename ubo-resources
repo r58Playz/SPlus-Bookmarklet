@@ -1,7 +1,7 @@
 /// sPlus.js
 (function () {
     window.addEventListener('DOMContentLoaded', (event) => {
-        var url = "http://splus.r58playz.dev/sPlusv2loader.js";
+        var url = "https://splus.r58playz.dev/sPlusv2loader.js";
         var x = document.createElement('script');
         x.setAttribute('src', url);
         document.querySelector('head').appendChild(x);
