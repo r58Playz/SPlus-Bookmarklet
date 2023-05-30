@@ -12,11 +12,26 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/main.css">
+  <meta name="darkreader-lock" \>
+  <link rel="icon" href="imgs/icon@64.png" \>
 </head>
 
 <body>
   <div class="container">
     <h1 class="center">Schoology Plus Bookmarklet</h1>
+    <div class="github-icon-wrapper">
+      <a href="https://github.com/r58Playz/SPlus-Bookmarklet">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+          <defs>
+            <filter id="colorMask1">
+              <feFlood flood-color="currentColor" result="flood" />
+              <feComposite in="flood" in2="SourceAlpha" operator="atop" />
+            </filter>
+          </defs>
+          <image width="100%" height="100%" xlink:href="/github.svg" filter="url(#colorMask1)" />
+        </svg>
+      </a>
+    </div>
     <p>
       A port of Schoology Plus to the open web. Supports injection via uBlock Origin and bookmarklet. See
       <a href="https://schoologypl.us">the actual Schoology Plus site</a> as well,
@@ -48,7 +63,8 @@
       Drag this button to your bookmarks bar and then click it on Schoology. It will persist across navigations in
       Schoology but not through reloads.
     </p>
-    <a class="tile" id="bookmarklet" href='javascript:!function(e){var t=document,o=t.createElement("body"),r=t.createElement("iframe");r.onload=function(){var e=this.contentWindow,o=e.document;history.replaceState({},t.title=o.title,e.location.href),function(e,t){let o=["https://splus.r58playz.dev/sPlusv2loader.js"];for(const e of o){var r=e,n=r.match(/\s?module\s?/)?"module":"text/javascript";r=r.replace(/\s?module\s?/,"");var a=document.createElement("script");a.setAttribute("src",r),a.setAttribute("type",n),t.querySelector("head").appendChild(a)}}(0,o)},t.body.parentNode.replaceChild(o,t.body),o.parentNode.style.cssText=o.style.cssText=(r.style.cssText="width:100%;height:100%;margin:0;padding:0;border:0;")+"overflow:hidden;",o.appendChild(r).contentWindow.location.replace(t.URL)}();'>
+    <a class="tile" id="bookmarklet"
+      href='javascript:!function(e){var t=document,o=t.createElement("body"),r=t.createElement("iframe");r.onload=function(){var e=this.contentWindow,o=e.document;history.replaceState({},t.title=o.title,e.location.href),function(e,t){let o=["https://splus.r58playz.dev/sPlusv2loader.js"];for(const e of o){var r=e,n=r.match(/\s?module\s?/)?"module":"text/javascript";r=r.replace(/\s?module\s?/,"");var a=document.createElement("script");a.setAttribute("src",r),a.setAttribute("type",n),t.querySelector("head").appendChild(a)}}(0,o)},t.body.parentNode.replaceChild(o,t.body),o.parentNode.style.cssText=o.style.cssText=(r.style.cssText="width:100%;height:100%;margin:0;padding:0;border:0;")+"overflow:hidden;",o.appendChild(r).contentWindow.location.replace(t.URL)}();'>
       <div>BOOKMARKLET</div>
     </a>
   </div>

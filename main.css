@@ -53,3 +53,18 @@ pre {
   justify-content: center;
   align-items: center;
 }
+
+.github-icon-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.github-icon-wrapper svg {
+  width: 3em;
+  height: 3em;
+  color: #c6d0f5;
+}
+
+.github-icon-wrapper svg:hover {
+  color: #8caaee;
+}
