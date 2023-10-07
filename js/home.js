@@ -143,6 +143,10 @@
                     readBroadcasts = readBroadcasts === null ? [] : JSON.parse(readBroadcasts);
 
                     onlineBroadcasts = onlineBroadcasts.filter(b => !readBroadcasts.includes(b.id) && !unreadBroadcasts.map(u => u.id).includes(b.id));
+                    for (let onlineBroadcast of onlineBroadcasts) {
+                        onlineBroadcast.title = DOMPurify.sanitize(onlineBroadcast.title);
+                        onlineBroadcast.message = DOMPurify.sanitize(onlineBroadcast.message);
+                    }
                 } catch (err) {
                     // Ignore
                 }

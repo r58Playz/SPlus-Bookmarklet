@@ -277,22 +277,21 @@
 
             try {
                 let importedSettingsObj = JSON.parse(importedSettings);
+                window.splus.Setting.setValues(importedSettingsObj, () => {
+                    trackEvent("button_click", {
+                        id: "import-settings-success",
+                        context: "Settings",
+                        legacyTarget: "import-settings",
+                        legacyAction: "successfully imported settings",
+                        legacyLabel: "Setting"
+                    });
+                    alert("Successfully imported settings. If Schoology Plus breaks, please restore defaults or reinstall. Reloading page.")
+                    location.reload();
+                });
             } catch (err) {
                 alert("Failed to import settings! They were probably malformed. Make sure the settings are valid JSON.");
                 return;
             }
-
-            window.splus.Setting.setValues(importedSettingsObj, () => {
-                trackEvent("button_click", {
-                    id: "import-settings-success",
-                    context: "Settings",
-                    legacyTarget: "import-settings",
-                    legacyAction: "successfully imported settings",
-                    legacyLabel: "Setting"
-                });
-                alert("Successfully imported settings. If Schoology Plus breaks, please restore defaults or reinstall. Reloading page.")
-                location.reload();
-            });
         }
     }
 
@@ -519,6 +518,16 @@
                     ]),
                     createElement("div", [], {id: "splus-settings-section-appearance"}, [
                         new window.splus.Setting(
+                            "clearSPlusV3Cache",
+                            "Clear V3 Loader cache",
+                            "Click to clear the Schoology Plus Bookmarklet v3 loader cache.",
+                            "Clear",
+                            "button",
+                            {},
+                            value => "Clear Cache",
+                            event => {localStorage.removeItem("splus-loader"); location.reload()}
+                        ).control,
+                        new window.splus.Setting(
                             "themeEditor",
                             "Theme Editor",
                             "Click to open the theme editor to create, edit, or select a theme",
@@ -586,6 +595,28 @@
                             "Use Built-In Icon Set",
                             `[Refresh required] Use Schoology Plus's <a href="${chrome.runtime.getURL("/default-icons.html")}" target="_blank">default course icons</a> as a fallback when a custom icon has not been specified. NOTE: these icons were meant for schools in Los Angeles Unified School District and may not work correctly for other schools.`,
                             window.splus.isLAUSD() ? "enabled" : "disabled",
+                            "select",
+                            {
+                                options: [
+                                    {
+                                        text: "Enabled",
+                                        value: "enabled"
+                                    },
+                                    {
+                                        text: "Disabled",
+                                        value: "disabled"
+                                    }
+                                ]
+                            },
+                            value => value,
+                            undefined,
+                            element => element.value
+                        ).control,
+                        new window.splus.Setting(
+                            "courseIconFavicons",
+                            "Use Course Icons as Favicons When Possible",
+                            "[Refresh required] Use the course's icon as the favicon (the icon next to the tab's title) on most course pages. This will not work in all cases.",
+                            "enabled",
                             "select",
                             {
                                 options: [

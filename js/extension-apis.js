@@ -57,8 +57,8 @@ const c_s_sync = {
 // SET YOUR MANIFEST DATA HERE!
 function c_r_getManifest() {
     return {
-        'version_name': '6.0 (Bookmarklet) [S+ version 7.8.1]',
-        'version': '7.8.1'
+        'version_name': '6.0 (Bookmarklet) [S+ version 7.8.5]',
+        'version': '7.8.5'
     }
 }
 
