@@ -1,12 +1,12 @@
 /// sPlus.js
 (function () {
-    window.sPlusBookmarkletSourcePath = "https://splus.r58playz.dev";
-    fetch(window.sPlusBookmarkletSourcePath+"/sPlusv3Loader.js", {cache: "no-store"}).then(r=>r.text()).then(r=>eval(r));
+    window.sPlusBookmarkletSourcePath = "https://splus.r58playz.dev/";
+    fetch(window.sPlusBookmarkletSourcePath+"sPlusv3Loader.js", {cache: "no-store"}).then(r=>r.text()).then(r=>eval(r));
 })();
 
 /// sPlusLocal.js
 (function () {
-    window.sPlusBookmarkletSourcePath = "http://localhost:8000";
-    fetch(window.sPlusBookmarkletSourcePath+"/sPlusv3Loader.js", {cache: "no-store"}).then(r=>r.text()).then(r=>eval(r));
+    window.sPlusBookmarkletSourcePath = "http://localhost:8000/";
+    fetch(window.sPlusBookmarkletSourcePath+"sPlusv3Loader.js", {cache: "no-store"}).then(r=>r.text()).then(r=>eval(r));
 })();
 
