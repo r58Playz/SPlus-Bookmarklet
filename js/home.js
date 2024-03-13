@@ -229,10 +229,11 @@
                 },
                 textContent: upcomingHeading.textContent.toLowerCase()
             }));
-        } catch {}
+        } catch { }
     }
 
     window.splus.indicateSubmittedAssignments();
+    window.splus.getRecentlyCompletedDenominators();
     await window.splus.createQuickAccess();
     setTimeout(() => {
         reorderSidebar();

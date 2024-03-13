@@ -386,15 +386,15 @@
                 createElement(
                     "div",
                     [], {
-                        id: "assessment-darktheme-warning-message",
-                        textContent: "WARNING: A dark theme is enabled and might prevent you from reading certain questions. If you can't read a question, you can temporarily disable dark theme using the Toggle Theme button on the navigation bar.",
-                        dataset: {
-                            popup: window.splus.Setting.getNestedValue("popup", "assessmentDarkThemeWarning", true)
-                        },
-                        style: {
-                            display: "none"
-                        }
+                    id: "assessment-darktheme-warning-message",
+                    textContent: "WARNING: A dark theme is enabled and might prevent you from reading certain questions. If you can't read a question, you can temporarily disable dark theme using the Toggle Theme button on the navigation bar.",
+                    dataset: {
+                        popup: window.splus.Setting.getNestedValue("popup", "assessmentDarkThemeWarning", true)
                     },
+                    style: {
+                        display: "none"
+                    }
+                },
                     [
                         createElement("p", ["click-to-hide"], {}, [
                             createElement("span", [], {

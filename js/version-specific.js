@@ -31,12 +31,12 @@
         options = {},
         iconUrl = chrome.runtime.getURL("/imgs/plus-icon.png")
     } = {
-        theme: "dark",
-        layout: 1,
-        timeout: 0,
-        position: "topRight",
-        iconUrl: chrome.runtime.getURL("/imgs/plus-icon.png")
-    }) {
+            theme: "dark",
+            layout: 1,
+            timeout: 0,
+            position: "topRight",
+            iconUrl: chrome.runtime.getURL("/imgs/plus-icon.png")
+        }) {
         let toastOptions = {
             theme,
             iconUrl,
@@ -107,12 +107,13 @@
      * @param {Date|number} timestamp Timestamp to show as the post time in the home feed
      * @returns {Broadcast}
      */
-    window.splus.createBroadcast = function(id, title, message, timestamp = Date.now()) {
+    window.splus.createBroadcast = function(id, title, message, timestamp = Date.now(), expires = undefined) {
         return {
             id: String(id),
             title,
             message,
-            timestamp: +timestamp
+            timestamp: +timestamp,
+            expires: expires !== undefined ? +expires : undefined
         };
     }
 
@@ -199,7 +200,7 @@
                     510,
                     "Schoology Plus Discord Server",
                     "Schoology Plus has a Discord server where you can offer feature suggestions, report bugs, get support, or just talk with other Schoology Plus users. <a href=\"https://discord.schoologypl.us\" id=\"announcement-discord-link\" class=\"splus-track-clicks\">Click here</a> to join!",
-                    new Date(2019, 1 /* February - don't you just love JavaScript */ , 14)
+                    new Date(2019, 1 /* February - don't you just love JavaScript */, 14)
                 )
             ]);
         },
@@ -231,7 +232,7 @@
                     </div>
                     <img style="padding-top: 10px;" src="https://i.imgur.com/mrE2Iec.png"/>
                     `,
-                        new Date(2020, 9 /* October */ , 19)
+                        new Date(2020, 9 /* October */, 19)
                     )
                 ]);
             }

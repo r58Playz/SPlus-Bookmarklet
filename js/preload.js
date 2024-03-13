@@ -27,7 +27,7 @@
     }, {
         name: "Recently Completed",
         selector: "#right-column-inner div.recently-completed-wrapper"
-    }, ];
+    },];
     window.splus.SIDEBAR_SECTIONS_MAP = Object.fromEntries(window.splus.SIDEBAR_SECTIONS.map(s => [s.name, s]));
 
     window.splus.updateSettings();
@@ -157,7 +157,7 @@
      * @param {string} path The API path, e.g. "/sections/12345/assignments/12"
      */
     window.splus.fetchApi = function(path) {
-        return fetchWithApiAuthentication(`https://sch-proxy.r58playz.dev/api/v1?apiAddress=${path}`);
+        return window.splus.fetchWithApiAuthentication(`https://sch-proxy.r58playz.dev/api/v1?apiAddress=${path}`);
     }
 
     /**
@@ -168,7 +168,7 @@
      * @param {boolean} [useRateLimit=true] Whether or not to use the internal Schoology API rate limit tracker. Defaults to true.
      * @param {string} [bodyReadType="json"] The method with which the body should be read.
      */
-    async function fetchWithApiAuthentication(url, baseObj, useRateLimit = true, bodyReadType = "json") {
+    window.splus.fetchWithApiAuthentication = async (url, baseObj, useRateLimit = true, bodyReadType = "json") => {
         return await (useRateLimit ? preload_schoologyPlusApiRateLimitedFetch : backgroundPageFetch)(url, {
             headers: createApiAuthenticationHeaders(await getApiKeysInternal(), baseObj)
         }, bodyReadType);
@@ -347,8 +347,8 @@
         "The website on which Schoology Plus runs. Cannot be changed here.",
         "app.schoology.com",
         "text", {
-            disabled: true
-        },
+        disabled: true
+    },
         value => value,
         undefined,
         element => element.value

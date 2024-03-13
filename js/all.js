@@ -14,27 +14,11 @@
             "Theme Generated",
             "Schoology Plus created a theme that matches your school's theme",
             "rgb(0,255,0)", {
-                buttons: [
-                    window.splus.createToastButton("View Themes", "view-themes-button", () => location.href = "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage")
-                ]
-            }
+            buttons: [
+                window.splus.createToastButton("View Themes", "view-themes-button", () => location.href = "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage")
+            ]
+        }
         );
-    }
-
-    function changeApiKeyStatus() {
-        var uid = window.splus.getUserId();
-        alert(uid);
-        var key = prompt("Paste in your Schoology API key here.");
-        var secret = prompt("Paste in your Schoology API secret here.");
-        window.splus.Setting.setValue("apikey", key, () => {
-            window.splus.Setting.setValue("apisecret", secret, () => {
-                window.splus.Setting.setValue("apiuser", uid, () => {
-                    window.splus.Setting.setValue("apistatus", "allowed", () => {
-                        alert("Done.");
-                    });
-                });
-            });
-        });
     }
 
     let betaCode = window.splus.Setting.getValue("beta");
@@ -45,7 +29,7 @@
             textContent: "β",
             id: "beta-tag"
         });
-        betaTag.addEventListener("click", event => window.splus.openModal("beta-modal"));
+        betaTag.addEventListener("click", _ => window.splus.openModal("beta-modal"));
         let betaContainer = createElement("div", ["splus-beta-container"], {}, [betaTag]);
         document.body.append(betaContainer);
         betaSection = createBetaSection(betaCode);
@@ -135,7 +119,7 @@
         content: "width=device-width, initial-scale=1"
     }));
     let bottom = document.querySelector("span.Footer-copyright-2Vt6I");
-    if (bottom){
+    if (bottom) {
         bottom.appendChild(createElement("span", ["footer-divider"], {
             textContent: "|"
         }, [
@@ -229,14 +213,14 @@
                     "[Reload required] Allow Schoology Plus to collect anonymous information about how you use the extension. We don't collect any personal information per our privacy policy.",
                     window.splus.getBrowser() === "Firefox" ? "disabled" : "enabled",
                     "select", {
-                        options: [{
-                            text: "Enabled",
-                            value: "enabled"
-                        }, {
-                            text: "Disabled",
-                            value: "disabled"
-                        }]
-                    },
+                    options: [{
+                        text: "Enabled",
+                        value: "enabled"
+                    }, {
+                        text: "Disabled",
+                        value: "disabled"
+                    }]
+                },
                     value => value,
                     undefined,
                     element => element.value
@@ -301,8 +285,8 @@
                     "[Reload required] Enables a beta test of a new Schoology Plus feature if you enter a valid code",
                     "",
                     "text", {
-                        enabled: window.splus.Setting.getValue("analytics") === "enabled"
-                    },
+                    enabled: window.splus.Setting.getValue("analytics") === "enabled"
+                },
                     value => value,
                     undefined,
                     element => element.value
@@ -436,7 +420,7 @@
                         }, {
                             name: "@TheThonos",
                             url: "https://github.com/TheThonos"
-                        }, ])
+                        },])
                     }),
                 ]),
                 createElement("h2", ["setting-entry"], {
@@ -483,7 +467,7 @@
                             name: "RVxBot#7862"
                         }, {
                             name: "TechFun#9234"
-                        }, ])
+                        },])
                     }),
                 ]),
                 createElement("h2", ["setting-entry"], {
@@ -600,37 +584,37 @@
                     text: "See More Themes or Make Your Own",
                     theme: window.splus.Theme.active.name,
                     extraWide: window.splus.Theme.active.name === "Schoology Plus"
-                }, ].map(
+                },].map(
                     obj => {
                         return createElement("div", [...["splus-button-tile", "select-theme-tile"], ...(obj.active ? ["active"] : [])], {
-                                style: {
-                                    display: obj.hidden ? "none" : "flex",
-                                    gridColumnEnd: obj.extraWide ? "span 2" : "unset"
-                                },
-                                dataset: {
-                                    new: obj.new
-                                },
-                                onclick: e => {
-                                    for (let child of e.target.parentElement.children) {
-                                        child.classList.remove("active");
-                                    }
-                                    e.target.classList.add("active");
-
-                                    trackEvent("button_click", {
-                                        id: "preview-theme",
-                                        context: "Choose Theme Popup",
-                                        value: obj.text,
-                                        legacyTarget: "selected tile",
-                                        legacyAction: obj.text,
-                                        legacyLabel: "Choose Theme Popup"
-                                    });
-
-                                    tempTheme = obj.theme;
-                                    window.splus.Theme.apply(window.splus.Theme.byName(obj.theme));
-
-                                    document.getElementById("theme-popup-select-button").value = `Select ${obj.text}`;
-                                }
+                            style: {
+                                display: obj.hidden ? "none" : "flex",
+                                gridColumnEnd: obj.extraWide ? "span 2" : "unset"
                             },
+                            dataset: {
+                                new: obj.new
+                            },
+                            onclick: e => {
+                                for (let child of e.target.parentElement.children) {
+                                    child.classList.remove("active");
+                                }
+                                e.target.classList.add("active");
+
+                                trackEvent("button_click", {
+                                    id: "preview-theme",
+                                    context: "Choose Theme Popup",
+                                    value: obj.text,
+                                    legacyTarget: "selected tile",
+                                    legacyAction: obj.text,
+                                    legacyLabel: "Choose Theme Popup"
+                                });
+
+                                tempTheme = obj.theme;
+                                window.splus.Theme.apply(window.splus.Theme.byName(obj.theme));
+
+                                document.getElementById("theme-popup-select-button").value = `Select ${obj.text}`;
+                            }
+                        },
                             [
                                 createElement("span", ["splus-button-tile-content"], {
                                     textContent: obj.text
@@ -797,23 +781,23 @@
         createElement(
             "button",
             ["_1SIMq", "_2kpZl", "_3OAXJ", "_13cCs", "_3_bfp", "_2M5aC", "_24avl", "_3v0y7", "_2s0LQ", "_3ghFm", "_3LeCL", "_31GLY", "_9GDcm", "_1D8fw", "util-height-six-3PHnk", "util-line-height-six-3lFgd", "util-text-decoration-none-1n0lI", "Header-header-button-active-state-3AvBm", "Header-header-button-1EE8Y", "sExtlink-processed", "splus-track-clicks"], {
-                id: "darktheme-toggle-navbar-button",
-                title: "Toggle Theme\n\nUse this button to temporarily disable your Schoology Plus theme if something isn't displaying correctly.",
-                onclick: e => {
-                    let newVal = document.documentElement.getAttribute("modern") == "false" ? "true" : "false";
-                    if (newVal == "false") {
-                        tempTheme = "Schoology Plus";
-                    } else {
-                        tempTheme = undefined;
-                    }
-                    window.splus.Theme.apply(window.splus.Theme.active);
-                    document.documentElement.setAttribute("modern", newVal);
-                    trackEvent("modern-theme-toggle", newVal, "Navbar Button");
-                },
-                dataset: {
-                    popup: window.splus.Setting.getNestedValue("popup", "modernThemeToggle", true) && (localStorage.getItem("popup.modernThemeToggle") !== "false")
+            id: "darktheme-toggle-navbar-button",
+            title: "Toggle Theme\n\nUse this button to temporarily disable your Schoology Plus theme if something isn't displaying correctly.",
+            onclick: e => {
+                let newVal = document.documentElement.getAttribute("modern") == "false" ? "true" : "false";
+                if (newVal == "false") {
+                    tempTheme = "Schoology Plus";
+                } else {
+                    tempTheme = undefined;
                 }
+                window.splus.Theme.apply(window.splus.Theme.active);
+                document.documentElement.setAttribute("modern", newVal);
+                trackEvent("modern-theme-toggle", newVal, "Navbar Button");
             },
+            dataset: {
+                popup: window.splus.Setting.getNestedValue("popup", "modernThemeToggle", true) && (localStorage.getItem("popup.modernThemeToggle") !== "false")
+            }
+        },
             [
                 createElement("div", ["explanation-popup"], {}, [
                     createElement("span", [], {
@@ -854,19 +838,19 @@
         createElement(
             "button",
             ["_1SIMq", "_2kpZl", "_3OAXJ", "_13cCs", "_3_bfp", "_2M5aC", "_24avl", "_3v0y7", "_2s0LQ", "_3ghFm", "_3LeCL", "_31GLY", "_9GDcm", "_1D8fw", "util-height-six-3PHnk", "util-line-height-six-3lFgd", "util-text-decoration-none-1n0lI", "Header-header-button-active-state-3AvBm", "Header-header-button-1EE8Y", "sExtlink-processed"], {
-                id: "splus-settings-navbar-button",
-                title: "Schoology Plus Settings\n\nChange settings relating to Schoology Plus.",
-                onclick: () => {
-                    window.splus.openModal("settings-modal");
-                    trackEvent("button_click", {
-                        id: "splus-settings",
-                        context: "Navbar",
-                        legacyTarget: "splus-settings",
-                        legacyAction: "open",
-                        legacyLabel: "Navbar Button"
-                    });
-                }
-            },
+            id: "splus-settings-navbar-button",
+            title: "Schoology Plus Settings\n\nChange settings relating to Schoology Plus.",
+            onclick: () => {
+                window.splus.openModal("settings-modal");
+                trackEvent("button_click", {
+                    id: "splus-settings",
+                    context: "Navbar",
+                    legacyTarget: "splus-settings",
+                    legacyAction: "open",
+                    legacyLabel: "Navbar Button"
+                });
+            }
+        },
             [
                 window.splus.createSvgLogo("_3ESp2", "dlCBz", "_1I3mg", "fjQuT", "uQOmx")
             ]
@@ -1090,7 +1074,7 @@
         }
     });
 
-    for (let candidateLabel of document.querySelectorAll("#header nav ul > li span._1D8fw")) {
+    for (let candidateLabel of document.querySelectorAll("#header nav ul > li button > span")) {
         if (candidateLabel.textContent == "Courses") {
             // a span inside a button inside a div (inside a li)
             coursesDropdownContainer = candidateLabel.parentElement.parentElement;
@@ -1156,7 +1140,7 @@
         }
     });
 
-    for (let candidateLabel of document.querySelectorAll("#header nav ul > li span._1D8fw")) {
+    for (let candidateLabel of document.querySelectorAll("#header nav ul > li button > span")) {
         if (candidateLabel.textContent == "Groups") {
             // a span inside a button inside a div (inside a li)
             groupsDropdownContainer = candidateLabel.parentElement.parentElement;
@@ -1322,7 +1306,7 @@
 
     window.splus.createQuickAccess = async function() {
         let rightCol = document.getElementById("right-column-inner"); // someday im going to migrate this codebase to querySelector
-        if(!rightCol) return;
+        if (!rightCol) return;
         let linkWrap;
 
         let wrapper = createElement("div", ["quick-access-wrapper"], {}, [
@@ -1368,7 +1352,7 @@
             textContent: "Messages",
             href: "/messages",
             id: "quick-access-messages"
-        }, ];
+        },];
 
         for (let page of PAGES) {
             let a = linkWrap.appendChild(createElement("a", ["quick-link", "splus-track-clicks"], page));
@@ -1481,6 +1465,23 @@
         rightCol.append(wrapper);
     }
 
+    function getAssignmentId(url) {
+        if (url.includes("/assignment/")) {
+            return url.match(/assignment\/(\d+)/)[1];
+        } else if (url.includes("/course/")) {
+            // Discussion boards, maybe other assignments as well
+            return url.match(/course\/\d+\/.*\/(\d+)/)[1];
+        } else if (url.includes("/event/")) {
+            // Calendar events
+            return url.match(/event\/(\d+)/)[1];
+        } else if (url.includes("/external_tool/")) {
+            // External tools
+            return url.match(/external_tool\/(\d+)/)[1];
+        }
+
+        return null;
+    }
+
     window.splus.indicateSubmittedAssignments = function() {
         let upcomingList = document.querySelector(".upcoming-events .upcoming-list");
         const completionOverridesSetting = "assignmentCompletionOverrides";
@@ -1555,30 +1556,18 @@
             let assignmentElement = infotipElement.querySelector("a[href]");
 
             // Try another layout used on course pages
-            if(!assignmentElement) {
+            if (!assignmentElement) {
                 assignmentElement = eventElement.querySelector("a");
-                if(!assignmentElement || !assignmentElement.href.includes("assignment")) assignmentElement = null;
+                if (!assignmentElement || !assignmentElement.href.includes("assignment")) assignmentElement = null;
             }
 
-            if(!assignmentElement) {
+            if (!assignmentElement) {
                 console.warn("This assignment has no link, probably is not available on Schoology, skipping.");
                 return;
             }
 
             // TODO errorcheck the assignmentId match
-            let assignmentId = null;
-            if (assignmentElement.href.includes("/assignment/")) {
-                assignmentId = assignmentElement.href.match(/assignment\/(\d+)/)[1];
-            } else if (assignmentElement.href.includes("/course/")) {
-                // Discussion boards, maybe other assignments as well
-                assignmentId = assignmentElement.href.match(/course\/\d+\/.*\/(\d+)/)[1];
-            } else if (assignmentElement.href.includes("/event/")) {
-                // Calendar events
-                assignmentId = assignmentElement.href.match(/event\/(\d+)/)[1];
-            } else if (assignmentElement.href.includes("/external_tool/")) {
-                // External tools
-                assignmentId = assignmentElement.href.match(/external_tool\/(\d+)/)[1];
-            }
+            let assignmentId = getAssignmentId(assignmentElement.href);
 
             // add a CSS class for both states, so we can distinguish 'loading' from known-(in)complete
             let isMarkedComplete = isAssignmentMarkedComplete(assignmentId);
@@ -1629,7 +1618,7 @@
             }
 
             // check if reload is present and visible on page
-            if(!upcomingList) return;
+            if (!upcomingList) return;
             let reloadButton = upcomingList.querySelector("button.button-reset.refresh-button");
             if (reloadButton && reloadButton.offsetParent !== null) {
                 reloadButton.addEventListener("click", () => setTimeout(indicateSubmitted, 500));
@@ -1652,6 +1641,97 @@
 
         setTimeout(indicateSubmitted, 1000);
     }
+
+    window.splus.getRecentlyCompletedDenominators = () => {
+        let recentlyCompletedList = document.querySelector(".recently-completed-wrapper .recently-completed-list");
+
+        async function getDirectAssignmentDenominatorAsync(assignmentId) {
+            try {
+                let json = await window.splus.fetchApiJson(`sections/${sectionId}/assignments/${assignmentId}`);
+                return json.max_points;
+            }
+            catch (err) {
+                return null;
+            }
+        }
+
+        async function getAssignmentDenominatorAsync(sectionId, assignmentId) {
+            if (assignmentId == null) {
+                return null;
+            }
+
+            let directDenominator = await getDirectAssignmentDenominatorAsync(assignmentId);
+            if (directDenominator !== null && !Number.isNaN(directDenominator)) {
+                Logger.debug(`Found direct denominator for assignment ${assignmentId} in section ${sectionId}: ${directDenominator}`);
+                return directDenominator;
+            }
+
+            try {
+                let json = await window.splus.fetchApiJson(`users/${getUserId()}/grades?section_id=${sectionId}`);
+
+                if (json.section.length === 0) {
+                    throw new Error("Assignment details could not be read");
+                }
+
+                const assignments = json.section[0].period.reduce((prevVal, curVal) => prevVal.concat(curVal.assignment), []); //combines the assignment arrays from each period
+
+                let denom = Number.parseFloat(assignments.filter(x => x.assignment_id == assignmentId)[0].max_points);
+
+                Logger.debug(`Found indirect denominator for assignment ${assignmentId} in section ${sectionId}: ${denom}`);
+
+                return denom;
+            } catch (err) {
+                Logger.error(`Failed finding denominator for assignment ${assignmentId} in section ${sectionId}`, err);
+                return null;
+            }
+        }
+
+        async function getSectionIdMap() {
+            let sections = await window.splus.fetchApiJson(`users/${window.splus.getUserId()}/sections`);
+            let sectionMap = {};
+
+            for (let section of sections.section) {
+                sectionMap[section.course_title + " : " + section.section_title] = section.id;
+            }
+
+            return sectionMap;
+        }
+
+        // Indicate submitted assignments in Upcoming
+        async function getDenominators() {
+            let sectionMap = await getSectionIdMap();
+
+            for (let recentEvent of recentlyCompletedList.querySelectorAll(".recently-completed-event")) {
+                try {
+                    let eventLink = recentEvent.querySelector("a[href]");
+                    let assignmentId = getAssignmentId(eventLink.href);
+                    let sectionId = sectionMap[recentEvent.querySelector(".realm-title-course-title .realm-main-titles").textContent.trim()];
+
+                    if (sectionId && assignmentId) {
+                        Logger.debug(`Getting denominator for assignment ${assignmentId} in section ${sectionId}`);
+                        let denominator = await getAssignmentDenominatorAsync(sectionId, assignmentId);
+                        Logger.debug(`Got denominator for assignment ${assignmentId} in section ${sectionId}: ${denominator}`);
+
+                        if (denominator) {
+                            let prevElement = recentEvent.querySelector("span.infotip.grade-infotip span.recently-completed-grade");
+
+                            if (prevElement) {
+                                let denominatorElement = createElement("span", ["splus-recent-denominator"], { textContent: ` / ${denominator}` });
+                                prevElement.insertAdjacentElement("afterend", denominatorElement);
+                            } else {
+                                recentEvent.querySelector("span.recently-completed-grade").textContent += ` / ${denominator}`;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    Logger.error(`Failed finding denominator for recent assignment '${recentEvent.querySelector(".infotip a[href]")?.href}' : `, err);
+                }
+            }
+        }
+
+        setTimeout(getDenominators, 1000);
+    }
+
 
     window.splus.Logger.debug("Finished loading all.js");
     window.splusLoaded.add("all");

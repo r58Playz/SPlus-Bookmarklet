@@ -132,7 +132,7 @@
                 // get the URL of the doc we want
                 // it's an unauthenticated CDN url that expires (experimentation), returned as a redirect
                 // unfortunately we need permissions for the extra domain
-                documentUrlFromApi = (await fetchWithApiAuthentication(fileData.converted_download_path)).url;
+                documentUrlFromApi = (await window.splus.fetchApi(fileData.converted_download_path.split("v1/")[1])).url;
             } else {
                 value.dataset.schoologyPlusProcessedTooltip = true;
                 return;

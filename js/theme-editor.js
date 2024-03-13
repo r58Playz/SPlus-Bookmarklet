@@ -300,12 +300,12 @@
     });
 
     for (let e of document.querySelectorAll("#theme-editor-section input")) {
-        e.addEventListener("input", function (event) {
+        e.addEventListener("input", function(event) {
             updateOutput();
         });
     }
     var mTabs = M.Tabs.init(document.querySelector(".tabs"), {
-        onShow: function (newtab) {
+        onShow: function(newtab) {
             if (newtab.id == "tab-preview") {
                 previewSection.classList.add("fixed-on-large-and-up");
             } else {
@@ -631,10 +631,10 @@
             preferredFormat: "hex",
             showAlpha: showAlpha,
             color: color || ["red", "blue", "yellow", "green", "magenta"][init++ % 5],
-            move: function (color) {
+            move: function(color) {
                 onupdate(color);
             },
-            hide: function (color) {
+            hide: function(color) {
                 onupdate(color);
             },
 
@@ -1021,7 +1021,7 @@
         let t = JSON.parse(output.value);
         if (origThemeName && t.name != origThemeName) {
             ConfirmModal.open("Rename Theme?", `Are you sure you want to rename "${origThemeName}" to "${t.name}"?`, ["Rename", "Cancel"], b => b === "Rename" && doSave(t));
-        } else {       
+        } else {
             trackEvent("perform_action", {
                 id: "color_type",
                 context: "New Theme Created",
@@ -1200,7 +1200,7 @@
                     legacyAction: "delete",
                     legacyLabel: "Theme List"
                 });
-                
+
                 chrome.storage.sync.get(["theme", "themes"], s => {
                     chrome.storage.sync.set({ theme: s.theme == name ? null : s.theme, themes: s.themes.filter(x => x.name != name) }, () => window.location.reload());
                 });
@@ -1366,7 +1366,7 @@
             pasteEvent.preventDefault();
             pasteEvent.stopPropagation();
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 let text = e.target.result;
                 pasteEvent.target.dataset.originalText = pasteEvent.target.dataset.text;
                 pasteEvent.target.dataset.text = "Uploading..."

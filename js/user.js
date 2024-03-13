@@ -44,7 +44,7 @@
                 commonList.push(owner);
                 break;
             } else if (enrollments.links.next) {
-                enrollments = await (await fetchWithApiAuthentication(enrollments.links.next)).json();
+                enrollments = await (await window.splus.fetchWithApiAuthentication(enrollments.links.next)).json();
             } else {
                 enrollments = null;
             }
@@ -73,30 +73,30 @@
             textContent: "Loading..."
         }));
         loadCourseFunction.then(coursesInCommon => {
-                clearNodeChildren(listElem);
+            clearNodeChildren(listElem);
 
-                let aliases = window.splus.Setting.getValue("courseAliases") || {};
+            let aliases = window.splus.Setting.getValue("courseAliases") || {};
 
-                if (coursesInCommon.length == 0) {
-                    listElem.appendChild(createElement("li", [], {
-                        textContent: "No common courses found"
-                    }));
-                } else {
-                    for (let section of coursesInCommon) {
-                        listElem.appendChild(createElement("li", [], {}, [
-                            createElement("img", [], {
-                                src: section.profile_url,
-                                alt: `Profile picture for ${section.course_title}: ${section.section_title}`
-                            }),
-                            createElement("a", [], {
-                                href: `https://${window.splus.Setting.getValue("defaultDomain")}/course/${section.id}`,
-                                textContent: aliases[section.id] || `${section.course_title}: ${section.section_title}`
-                            })
-                        ]));
-                    }
+            if (coursesInCommon.length == 0) {
+                listElem.appendChild(createElement("li", [], {
+                    textContent: "No common courses found"
+                }));
+            } else {
+                for (let section of coursesInCommon) {
+                    listElem.appendChild(createElement("li", [], {}, [
+                        createElement("img", [], {
+                            src: section.profile_url,
+                            alt: `Profile picture for ${section.course_title}: ${section.section_title}`
+                        }),
+                        createElement("a", [], {
+                            href: `https://${window.splus.Setting.getValue("defaultDomain")}/course/${section.id}`,
+                            textContent: aliases[section.id] || `${section.course_title}: ${section.section_title}`
+                        })
+                    ]));
                 }
-                window.splus.Theme.setProfilePictures(listElem.getElementsByTagName("img"));
-            })
+            }
+            window.splus.Theme.setProfilePictures(listElem.getElementsByTagName("img"));
+        })
             .catch(err => {
                 window.splus.Logger.error("Error building courses in common: ", err);
                 let listElem = document.getElementById(targetListElem);

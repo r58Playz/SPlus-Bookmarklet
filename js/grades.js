@@ -212,6 +212,12 @@
                             let processAssignment = async function(assignment) {
                                 let maxGrade = assignment.querySelector(".max-grade");
                                 let score = assignment.querySelector(".rounded-grade") || assignment.querySelector(".rubric-grade-value");
+
+                                if (!maxGrade && !score && !assignment.querySelector(".no-grade")) {
+                                    // some schoology assignments don't display a grade, so we need to create a placeholder
+                                    assignment.querySelector(".grade-column > .td-content-wrapper").prepend(createElement("span", ["no-grade"], { textContent: "—" }));
+                                }
+
                                 if (score) {
                                     let assignmentScore = Number.parseFloat(score.textContent);
                                     let assignmentMax = Number.parseFloat(maxGrade.textContent.substring(3));
@@ -712,7 +718,7 @@
                         window.splus.Logger.error("Editing disabled due to error", editDisableReason);
 
                         if (confirm("Grade editing has been disabled due to an error. If you are trying to use What If Grades on the grade report page, try going to an individual class gradebook instead. Would you like to report this issue? (It will help us fix it faster!)")) {
-                            window.open(`${BUG_REPORT_FORM_LINK}${encodeURIComponent(JSON.stringify(editDisableReason))}`, "_blank");
+                            // window.open(`${BUG_REPORT_FORM_LINK}${encodeURIComponent(JSON.stringify(editDisableReason))}`, "_blank");
                         }
 
                         document.getElementById("enable-modify").checked = false;
@@ -721,7 +727,7 @@
                     else if (document.getElementById("enable-modify").checked) {
                         if (editDisableReason && editDisableReason.allCausedBy403) {
                             if (confirm("WARNING!!!\n\nYou have one or more missing assignments for which the total points are unknown due to restrictions put in place by your teacher. Grade editing may work in some categories if this is a weighted gradebook, however it will be disabled in others. We are working on a fix for this issue, but until then please click 'OK' to submit a bug report so we can gague how large this problem is. Thank you!")) {
-                                window.open(`${BUG_REPORT_FORM_LINK}${encodeURIComponent(JSON.stringify(editDisableReason))}`, "_blank");
+                                // window.open(`${BUG_REPORT_FORM_LINK}${encodeURIComponent(JSON.stringify(editDisableReason))}`, "_blank");
                             }
                         }
 
@@ -1338,9 +1344,9 @@
                                         createElement(
                                             "span",
                                             ["rounded-grade"], {
-                                                title: String(jsonAssignment.grade),
-                                                textContent: String(jsonAssignment.grade)
-                                            }
+                                            title: String(jsonAssignment.grade),
+                                            textContent: String(jsonAssignment.grade)
+                                        }
                                         )
                                     ]
                                 );

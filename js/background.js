@@ -425,7 +425,7 @@ addDomainPermissionToggle();
 //                     redirectUrl: redirectUrl
 //                 }
 //             }
-//         }        
+//         }
 //     },
 //     { urls: ["*://*/sites/all/themes/schoology_theme/images/*"]},
 //     ['blocking']

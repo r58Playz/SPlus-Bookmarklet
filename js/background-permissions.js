@@ -259,7 +259,7 @@ async function handleClick({
         await togglePermission(tab, checked);
     } catch (error) {
         if (tab?.id) {
-            executeCode(tab.id, 'alert' /* Can't pass a raw native function */ , String(error)).catch(() => {
+            executeCode(tab.id, 'alert' /* Can't pass a raw native function */, String(error)).catch(() => {
                 alert(error); // One last attempt
             });
             updateItem({
@@ -347,11 +347,11 @@ if (typeof chrome === 'object' && !chrome.contentScripts) {
         async register(contentScriptOptions, callback) {
             const {
                 js = [],
-                    css = [],
-                    allFrames,
-                    matchAboutBlank,
-                    matches,
-                    runAt
+                css = [],
+                allFrames,
+                matchAboutBlank,
+                matches,
+                runAt
             } = contentScriptOptions;
             // Injectable code; it sets a `true` property on `document` with the hash of the files as key.
             const loadCheck = `document[${JSON.stringify(JSON.stringify({ js, css }))}]`;
@@ -445,7 +445,7 @@ async function registerOnOrigins({
     // Register one at a time to allow removing one at a time as well
     for (const origin of newOrigins || []) {
         for (const config of manifest) {
-            regFunc = typeof(browser) !== "undefined" && browser.contentScripts ? browser.contentScripts.register : chrome.contentScripts.register;
+            regFunc = typeof (browser) !== "undefined" && browser.contentScripts ? browser.contentScripts.register : chrome.contentScripts.register;
             const registeredScript = regFunc({
                 js: (config.js || []).map(convertPath),
                 css: (config.css || []).map(convertPath),

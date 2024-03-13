@@ -70,16 +70,16 @@
         this.body.appendChild(contentElement);
     }
 
-        /**
-     * Returns the name of the current browser
-     * @returns {"Chrome"|"Firefox"|"Other"} Name of the current browser
-     */
+    /**
+ * Returns the name of the current browser
+ * @returns {"Chrome"|"Firefox"|"Other"} Name of the current browser
+ */
     window.splus.getBrowser = function() {
         return "SPlus-Bookmarklet";
     }
-     /**
-     * @type {Object.<string,Setting>}
-     */
+    /**
+    * @type {Object.<string,Setting>}
+    */
     window.splus.__settings = {};
 
     window.splus.__storage = {};
@@ -511,12 +511,12 @@
             window.splus.modalContents = createElement("div", [], undefined, [
                 createElement("div", ["splus-modal-contents", "splus-settings-tabs"], {}, [
                     createElement("ul", [], {}, [
-                        createElement("li", [], {}, [createElement("a", [], {href: "#splus-settings-section-appearance", textContent: "Appearance"})]),
-                        createElement("li", [], {}, [createElement("a", [], {href: "#splus-settings-section-sidebar", textContent: "Homepage/Sidebar"})]),
-                        createElement("li", [], {}, [createElement("a", [], {href: "#splus-settings-section-grades", textContent: "Grades"})]),
-                        createElement("li", [], {}, [createElement("a", [], {href: "#splus-settings-section-utilities", textContent: "Utilities"})]),
+                        createElement("li", [], {}, [createElement("a", [], { href: "#splus-settings-section-appearance", textContent: "Appearance" })]),
+                        createElement("li", [], {}, [createElement("a", [], { href: "#splus-settings-section-sidebar", textContent: "Homepage/Sidebar" })]),
+                        createElement("li", [], {}, [createElement("a", [], { href: "#splus-settings-section-grades", textContent: "Grades" })]),
+                        createElement("li", [], {}, [createElement("a", [], { href: "#splus-settings-section-utilities", textContent: "Utilities" })]),
                     ]),
-                    createElement("div", [], {id: "splus-settings-section-appearance"}, [
+                    createElement("div", [], { id: "splus-settings-section-appearance" }, [
                         new window.splus.Setting(
                             "clearSPlusV3Cache",
                             "Clear V3 Loader cache",
@@ -525,7 +525,7 @@
                             "button",
                             {},
                             value => "Clear Cache",
-                            event => {localStorage.removeItem("splus-loader"); location.reload()}
+                            event => { localStorage.removeItem("splus-loader"); location.reload() }
                         ).control,
                         new window.splus.Setting(
                             "themeEditor",
@@ -535,7 +535,7 @@
                             "button",
                             {},
                             value => "Theme Editor",
-                            event => location.href = "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage" 
+                            event => location.href = "/sPlusBookmarkletTricksUserForThemeEditorChromeLocalStorage"
                         ).control,
                         new window.splus.Setting(
                             "theme",
@@ -547,9 +547,9 @@
                                 options: [
                                     ...window.splus.__defaultThemes.filter(
                                         t => window.splus.LAUSD_THEMES.includes(t.name) ? window.splus.isLAUSD() : true
-                                    ).map(t => {return {text: t.name, value: t.name}}),
+                                    ).map(t => { return { text: t.name, value: t.name } }),
                                     ...(window.splus.__storage.themes || []).map(
-                                        t => {return {text: t.name, value: t.name}}
+                                        t => { return { text: t.name, value: t.name } }
                                     )
                                 ]
                             },
@@ -656,7 +656,7 @@
                                 document.documentElement.setAttribute("style-override", value);
                                 return value;
                             },
-                            function (event) { this.onload(event.target.value) },
+                            function(event) { this.onload(event.target.value) },
                             element => element.value
                         ).control,
                         new window.splus.Setting(
@@ -682,32 +682,32 @@
                             element => element.value
                         ).control,
                         new window.splus.Setting(
-                            "helpCenterFAB",
-                            "Schoology Help Button",
-                            "Controls the visibility of the S button in the bottom right that shows the Schoology Guide Center",
-                            "hidden",
+                            "powerSchoolLogo",
+                            "PowerSchool Logo",
+                            "Controls the visibility of the PowerSchool logo on the navigation bar",
+                            "block",
                             "select",
                             {
                                 options: [
                                     {
                                         text: "Show",
-                                        value: "visible"
+                                        value: "block"
                                     },
                                     {
                                         text: "Hide",
-                                        value: "hidden"
+                                        value: "none"
                                     }
                                 ]
                             },
                             value => {
-                                window.splus.setCSSVariable("help-center-fab-visibility", value);
+                                window.splus.setCSSVariable("power-school-logo-display", value);
                                 return value;
                             },
-                            function (event) { this.onload(event.target.value) },
+                            function(event) { this.onload(event.target.value) },
                             element => element.value
                         ).control,
                     ]),
-                    createElement("div", [], {id: "splus-settings-section-sidebar"}, [
+                    createElement("div", [], { id: "splus-settings-section-sidebar" }, [
                         new window.splus.Setting(
                             "indicateSubmission",
                             "Submitted Assignments Checklist",
@@ -765,7 +765,7 @@
                                 }
                                 return value;
                             },
-                            function (event) { this.onload(event.target.value) },
+                            function(event) { this.onload(event.target.value) },
                             element => element.value
                         ).control,
                         new window.splus.Setting(
@@ -779,45 +779,45 @@
                             "custom",
                             {
                                 element: createElement("div", [], {}, [
-                                    createElement("p", [], {style: {fontWeight: "normal"}, textContent: "Drag items between the sections to control which sections of the sidebar are visible and the order in which they are shown."}),
+                                    createElement("p", [], { style: { fontWeight: "normal" }, textContent: "Drag items between the sections to control which sections of the sidebar are visible and the order in which they are shown." }),
                                     createElement("div", ["sortable-container"], {}, [
                                         createElement("div", ["sortable-list"], {}, [
-                                            createElement("h3", ["splus-underline-heading"], {textContent: "Sections to Hide"}),
-                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], {id: "sidebar-excluded-sortable"})
+                                            createElement("h3", ["splus-underline-heading"], { textContent: "Sections to Hide" }),
+                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], { id: "sidebar-excluded-sortable" })
                                         ]),
                                         createElement("div", ["sortable-list"], {}, [
-                                            createElement("h3", ["splus-underline-heading"], {textContent: "Sections to Show"}),
-                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], {id: "sidebar-included-sortable"})
+                                            createElement("h3", ["splus-underline-heading"], { textContent: "Sections to Show" }),
+                                            createElement("ul", ["sidebar-sortable", "splus-modern-border-radius", "splus-modern-padding"], { id: "sidebar-included-sortable" })
                                         ]),
                                     ])
                                 ]),
                             },
-                            function (value, element) {
+                            function(value, element) {
                                 let includeList = element.querySelector("#sidebar-included-sortable");
                                 let excludeList = element.querySelector("#sidebar-excluded-sortable");
 
                                 includeList.innerHTML = "";
                                 excludeList.innerHTML = "";
-                                
+
                                 if (!value || !value.include || !value.exclude) {
-                                    value = {include: [], exclude: []};
+                                    value = { include: [], exclude: [] };
                                 }
-                                
+
                                 for (let section of value.include) {
-                                    includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {textContent: section}))
+                                    includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], { textContent: section }))
                                 }
 
                                 for (let section of value.exclude) {
-                                    excludeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {textContent: section}))
+                                    excludeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], { textContent: section }))
                                 }
 
                                 for (let section of window.splus.SIDEBAR_SECTIONS) {
                                     if (!value.include.includes(section.name) && !value.exclude.includes(section.name)) {
-                                        includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], {textContent: section.name}))
+                                        includeList.appendChild(createElement("p", ["sortable-item", "splus-modern-border-radius", "splus-modern-padding"], { textContent: section.name }))
                                     }
                                 }
                             },
-                            function (event) { console.log(event); },
+                            function(event) { console.log(event); },
                             element => {
                                 let includeList = element.querySelector("#sidebar-included-sortable");
                                 let excludeList = element.querySelector("#sidebar-excluded-sortable");
@@ -827,7 +827,7 @@
                                     exclude: Array.from(excludeList.children).map(e => e.textContent)
                                 }
                             },
-                            function () {
+                            function() {
                                 $(".sidebar-sortable").sortable({
                                     connectWith: ".sidebar-sortable",
                                     stop: () => window.splus.Setting.onModify(this.getElement())
@@ -835,7 +835,7 @@
                             }
                         ).control,
                     ]),
-                    createElement("div", [], {id: "splus-settings-section-grades"}, [
+                    createElement("div", [], { id: "splus-settings-section-grades" }, [
                         new window.splus.Setting(
                             "customScales",
                             "Custom Grading Scales",
@@ -902,11 +902,11 @@
                                 window.splus.setCSSVariable("weighted-gradebook-indicator-display", value == "enabled" ? "inline" : "none")
                                 return value;
                             },
-                            function (event) { this.onload(event.target.value) },
+                            function(event) { this.onload(event.target.value) },
                             element => element.value
                         ).control,
                     ]),
-                    createElement("div", [], {id: "splus-settings-section-utilities"}, [
+                    createElement("div", [], { id: "splus-settings-section-utilities" }, [
                         new window.splus.Setting(
                             "notifications",
                             "Desktop Notifications",
@@ -1005,7 +1005,7 @@
                         ).control,
                         createElement("div", ["setting-entry"], {}, [
                             createElement("h2", ["setting-title"], {}, [
-                                createElement("a", [], { href: "#", textContent: "Change Schoology Account Access", onclick: () => {location.pathname = "/api";}, style: { fontSize: "" } })
+                                createElement("a", [], { href: "#", textContent: "Change Schoology Account Access", onclick: () => { location.pathname = "/api"; }, style: { fontSize: "" } })
                             ]),
                             createElement("p", ["setting-description"], { textContent: "Grant Schoology Plus access to your Schoology API Key so many features can function, or revoke that access." })
                         ]),

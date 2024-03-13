@@ -466,13 +466,13 @@
                 window.splus.showToast("Request New Course Icons?",
                     `${coursesMissingDefaultIcons.size} ${coursesMissingDefaultIcons.size == 1 ? "course is missing a Schoology Plus course icon. Would you like to request that an icon be added for this course?" : "courses are missing Schoology Plus course icons. Would you like to request that icons be added for these courses?"}`,
                     "yellow", {
-                        buttons: [
-                            window.splus.createToastButton("Yes", "suggest-icons-button", () => window.open(`${ICON_REQUEST_URL}${coursesString}`, "_blank")),
-                            window.splus.createToastButton("No", "nothing-button", () => window.splus.showToast("You can request icons later from course options", "", "hsl(190, 100%, 50%)", {
-                                timeout: 5000
-                            })),
-                        ]
-                    }
+                    buttons: [
+                        window.splus.createToastButton("Yes", "suggest-icons-button", () => window.open(`${ICON_REQUEST_URL}${coursesString}`, "_blank")),
+                        window.splus.createToastButton("No", "nothing-button", () => window.splus.showToast("You can request icons later from course options", "", "hsl(190, 100%, 50%)", {
+                            timeout: 5000
+                        })),
+                    ]
+                }
                 );
                 shownMissingIconsNotification = true;
                 window.splus.Setting.setValue("missingIconsLastCheck", new Date().valueOf());
